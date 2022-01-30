@@ -65,6 +65,32 @@ class VideoService {
 				'#^([\d\w\-\+]+)$#is'
 			]
 		],
+		'bilibili_aid' => [
+			'embed'			=> '<iframe title="%4$s" src="//player.bilibili.com/player.html?aid=%1$s" width="%2$d" height="%3$d" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>',
+			'default_width'	=> 640,
+			'default_ratio' => 1.77777777777778, // (16 / 9)
+			'https_enabled'	=> true,
+			'url_regex'		=> [
+				'#player\.bilibili\.com\/player\.html\?(?:(?:[a-zA-Z0-9=&]*&)?)aid=([1-9][\d]+)#is',
+				'#www\.bilibili\.com\/video\/[aA][vV]([1-9][\d]+)#is'
+			],
+			'id_regex'		=> [
+				'#^(?:[aA][vV])?([1-9][\d]*)$#is'
+			]
+		],
+		'bilibili_bvid' => [
+			'embed'			=> '<iframe title="%4$s" src="//player.bilibili.com/player.html?bvid=BV%1$s" width="%2$d" height="%3$d" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>',
+			'default_width'	=> 640,
+			'default_ratio' => 1.77777777777778, // (16 / 9)
+			'https_enabled'	=> true,
+			'url_regex'		=> [
+				'#player\.bilibili\.com\/player\.html\?(?:(?:[a-zA-Z0-9=&]*&)?)bvid=[bB][vV]([a-zA-Z0-9]+)#is',
+				'#www\.bilibili\.com\/video\/[bB][vV]([a-zA-Z0-9]+)#is'
+			],
+			'id_regex'		=> [
+				'#^(?:[bB][vV])?([a-zA-Z0-9]+)$#is'
+			]
+		],
 		'disclose' => [
 			'embed'			=> '<iframe title="%4$s" src="//www.disclose.tv/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
@@ -518,6 +544,8 @@ class VideoService {
 		'archive.org'				=> 'archiveorg',
 		'embed.bambuser.com'		=> ['bambuser', 'bambuser_channel'],
 		'beam.pro' 					=> 'beam',
+		'bilibili.com'				=> ['bilibili_aid', 'bilibili_bvid'],
+		'hdslb.com'					=> ['bilibili_aid', 'bilibili_bvid'],
 		'blip.tv'					=> 'blip',
 		'bing.com'					=> 'bing',
 		'collegehumor.com'			=> 'collegehumor',
