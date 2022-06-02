@@ -761,8 +761,11 @@ class VideoService {
 	public function parseVideoID($id) {
 		$id = trim($id);
 		// URL regexes are put into the array first to prevent cases where the ID regexes might accidentally match an incorrect portion of the URL.
-		$regexes = array_merge((array)$this->service['url_regex'], (array)$this->service['id_regex']);
-		if (is_array($regexes) && count($regexes)) {
+		$regexes = array_merge(
+			$this->service['url_regex'] ?? [],
+			$this->service['id_regex'] ?? []
+		);
+		if ($regexes) {
 			foreach ($regexes as $regex) {
 				if (preg_match($regex, $id, $matches)) {
 					// Get rid of the full text match.
