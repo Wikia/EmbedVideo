@@ -65,27 +65,31 @@ class VideoService {
 				'#^([\d\w\-\+]+)$#is'
 			]
 		],
-		'disclose' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.disclose.tv/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true"></iframe>',
+		'bilibili' => [
+			'embed'			=> '<iframe title="%4$s" src="//player.bilibili.com/player.html?bvid=BV%1$s" width="%2$d" height="%3$d" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>',
 			'default_width'	=> 640,
-			'default_ratio'	=> 1.77777777777778, // (640 / 360)
+			'default_ratio' => 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
 			'url_regex'		=> [
-				'#disclose.tv/embed/([\d]+)/([\w-]+)#is',
-				'#disclose.tv/action/viewvideo/([\d]+)/([\w-]+)/#is'
+				'#player\.bilibili\.com\/player\.html\?(?:(?:[a-zA-Z0-9=&]*&)?)bvid=[bB][vV]([a-zA-Z0-9]+)#is',
+				'#www\.bilibili\.com\/video\/[bB][vV]([a-zA-Z0-9]+)#is'
 			],
 			'id_regex'		=> [
-				'#^([\d]+)$#is'
+				'#^(?:[bB][vV])?([a-zA-Z0-9]+)$#is'
 			]
 		],
-		'blip' => [
+		'bilibili_aid' => [
+			'embed'			=> '<iframe title="%4$s" src="//player.bilibili.com/player.html?aid=%1$s" width="%2$d" height="%3$d" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>',
 			'default_width'	=> 640,
-			'default_ratio' => 1.2994923857868, // (640 / 493)
-			'https_enabled'	=> false,
+			'default_ratio' => 1.77777777777778, // (16 / 9)
+			'https_enabled'	=> true,
 			'url_regex'		=> [
-				'#(http://blip\.tv/[\w\d\-]+?/[\w\d\-]+?-[\d]+)#is'
+				'#player\.bilibili\.com\/player\.html\?(?:(?:[a-zA-Z0-9=&]*&)?)aid=([1-9][\d]+)#is',
+				'#www\.bilibili\.com\/video\/[aA][vV]([1-9][\d]+)#is'
 			],
-			'oembed'		=> 'http://blip.tv/oembed/?url=%1$s&width=%2$d&maxwidth=%2$d'
+			'id_regex'		=> [
+				'#^(?:[aA][vV])?([1-9][\d]*)$#is'
+			]
 		],
 		'bing' => [
 			'embed'			=> '<iframe title="%4$s" src="//hub.video.msn.com/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" scrolling="no" noscroll allowfullscreen="true"></iframe>',
@@ -98,6 +102,15 @@ class VideoService {
 			'id_regex'		=> [
 				'#^([a-zA-Z0-9]+)$#is'
 			]
+		],
+		'blip' => [
+			'default_width'	=> 640,
+			'default_ratio' => 1.2994923857868, // (640 / 493)
+			'https_enabled'	=> false,
+			'url_regex'		=> [
+				'#(http://blip\.tv/[\w\d\-]+?/[\w\d\-]+?-[\d]+)#is'
+			],
+			'oembed'		=> 'http://blip.tv/oembed/?url=%1$s&width=%2$d&maxwidth=%2$d'
 		],
 		'collegehumor' => [
 			'embed'			=> '<iframe title="%4$s" src="//www.collegehumor.com/e/%1$s" width="%2$d" height="%3$d" frameborder="0" allowFullScreen="true"></iframe>',
@@ -121,6 +134,19 @@ class VideoService {
 			],
 			'id_regex'		=> [
 				'#^([a-zA-Z0-9]+)(?:_\S+?)?#is'
+			]
+		],
+		'disclose' => [
+			'embed'			=> '<iframe title="%4$s" src="//www.disclose.tv/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true"></iframe>',
+			'default_width'	=> 640,
+			'default_ratio'	=> 1.77777777777778, // (640 / 360)
+			'https_enabled'	=> true,
+			'url_regex'		=> [
+				'#disclose.tv/embed/([\d]+)/([\w-]+)#is',
+				'#disclose.tv/action/viewvideo/([\d]+)/([\w-]+)/#is'
+			],
+			'id_regex'		=> [
+				'#^([\d]+)$#is'
 			]
 		],
 		'divshare' => [
@@ -518,8 +544,10 @@ class VideoService {
 		'archive.org'				=> 'archiveorg',
 		'embed.bambuser.com'		=> ['bambuser', 'bambuser_channel'],
 		'beam.pro' 					=> 'beam',
-		'blip.tv'					=> 'blip',
+		'bilibili.com'				=> ['bilibili', 'bilibili_aid'],
+		'hdslb.com'					=> ['bilibili', 'bilibili_aid'],
 		'bing.com'					=> 'bing',
+		'blip.tv'					=> 'blip',
 		'collegehumor.com'			=> 'collegehumor',
 		'dailymotion.com'			=> 'dailymotion',
 		'divshare.com'				=> 'divshare',
@@ -528,7 +556,7 @@ class VideoService {
 		'gfycat.com'				=> 'gfycat',
 		'content.jwplatform.com'	=> 'jwplayer',
 		'kickstarter.com'			=> 'kickstarter',
-		'media.ccc.de'				=> 'mideacccde',
+		'media.ccc.de'				=> 'mediacccde',
 		'metacafe.com'				=> 'metacafe',
 		'microsoftstream.com'		=> 'microsoftstream',
 		'mixer.com'					=> 'mixer',
@@ -540,7 +568,7 @@ class VideoService {
 		'teachertube.com'			=> 'teachertube',
 		'ted.com'					=> 'ted',
 		'tubitv.com'				=> 'tubitv',
-		'tudou.com'					=> 'todou',
+		'tudou.com'					=> 'tudou',
 		'tvpot.daum.net'			=> 'tvpot',
 		'twitch.tv'					=> ['twitch', 'twitchclip', 'twitchvod'],
 		'89.160.51.62'				=> 'videomaten',
