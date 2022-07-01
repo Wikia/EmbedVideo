@@ -94,6 +94,8 @@ class AudioTransformOutput extends \MediaTransformOutput {
 			}
 		}
 
+		$preloadValue = $parameters[ 'preload' ] ?? '';
+
 		$descLink = Html::element( 'a', [ 'href' => $parameters['descriptionUrl'] ], $parameters['descriptionUrl'] );
 
 		return Html::rawElement( 'audio', [
@@ -102,6 +104,7 @@ class AudioTransformOutput extends \MediaTransformOutput {
 			'class' => $class ?? false,
 			'style' => $style ? implode( ' ', $style ) : false,
 			'controls' => true,
+			'preload' => $preloadValue,
 		], $descLink );
 	}
 }
