@@ -634,6 +634,38 @@ class EmbedVideoHooks {
 	}
 
 	/**
+	 * @param ImagePage $imagePage the imagepage that is being rendered
+	 * @param OutputPage $out the output for this imagepage
+	 * @return bool
+	 */
+	public static function onImageOpenShowImageInlineBefore( ImagePage $imagePage, OutputPage $out ) {
+		$file = $imagePage->getDisplayedFile();
+		return self::onImagePageHooks( $file, $out );
+	}
+
+	/**
+	 * @param ImagePage $imagePage that is being rendered
+	 * @param File $file the (old) file added in this history entry
+	 * @param string &$line the HTML of the history line
+	 * @param string &$css the CSS class of the history line
+	 * @return bool
+	 */
+	public static function onImagePageFileHistoryLine( $imagePage, $file, $line, $css ) {
+		$out = $imagePage->getContext()->getOutput();
+		return self::onImagePageHooks( $file, $out );
+	}
+
+	private static function onImagePageHooks( $file, $out ) {
+		$handler = $file->getHandler();
+		if ( $handler !== false
+			 && ( $handler instanceof \EmbedVideo\AudioHandler ||
+				  $handler instanceof \Fandom\FandomEmbedVideo\AudioOrVideoHandler ) ) {
+			$out->addModules( 'ext.embedVideo.OgvJsSupport' );
+		}
+		return true;
+	}
+
+	/**
 	 * Generate the HTML necessary to embed the video with the given alignment
 	 * and text description
 	 *

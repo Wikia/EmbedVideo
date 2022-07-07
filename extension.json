@@ -70,6 +70,26 @@
 				"desktop",
 				"mobile"
 			]
+		},
+		"ext.embedVideo.OgvJsSupport": {
+			"scripts": [
+				"js/ogv.js/ogv-support.js",
+				"js/OgvJsSupport.js"
+			],
+			"targets": [
+				"mobile",
+				"desktop"
+			]
+		},
+		"ext.embedVideo.OgvJs": {
+			"scripts": [
+				"js/ogv.js/ogv.js"
+			],
+			"dependencies": "ext.embedVideo.OgvJsSupport",
+			"targets": [
+				"mobile",
+				"desktop"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -85,6 +105,12 @@
 	"Hooks": {
 		"ParserFirstCallInit": [
 			"EmbedVideoHooks::onParserFirstCallInit"
+		],
+		"ImageOpenShowImageInlineBefore": [
+			"EmbedVideoHooks::onImageOpenShowImageInlineBefore"
+		],
+		"ImagePageFileHistoryLine": [
+			"EmbedVideoHooks::onImagePageFileHistoryLine"
 		]
 	},
 	"manifest_version": 1
