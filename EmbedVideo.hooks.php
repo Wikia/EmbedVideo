@@ -72,16 +72,15 @@ class EmbedVideoHooks {
 	 * @return void
 	 */
 	public static function onExtension() {
-		global $wgEmbedVideoDefaultWidth, $wgMediaHandlers, $wgFileExtensions;
-
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig('main');
+		global $wgEmbedVideoDefaultWidth, $wgMediaHandlers, $wgFileExtensions,
+			$wgEmbedVideoEnableAudioHandler, $wgEmbedVideoEnableVideoHandler, $wgEmbedVideoAddFileExtensions;
 
 		if (!isset($wgEmbedVideoDefaultWidth) && (isset($_SERVER['HTTP_X_MOBILE']) && $_SERVER['HTTP_X_MOBILE'] == 'true') && $_COOKIE['stopMobileRedirect'] != 1) {
 			// Set a smaller default width when in mobile view.
 			$wgEmbedVideoDefaultWidth = 320;
 		}
 
-		if ($config->get('EmbedVideoEnableAudioHandler')) {
+		if ($wgEmbedVideoEnableAudioHandler) {
 			$wgMediaHandlers['application/ogg']		= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/flac']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/ogg']			= 'EmbedVideo\AudioHandler';
@@ -91,7 +90,7 @@ class EmbedVideoHooks {
 			$wgMediaHandlers['audio/webm']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/x-flac']		= 'EmbedVideo\AudioHandler';
 		}
-		if ($config->get('EmbedVideoEnableVideoHandler')) {
+		if ($wgEmbedVideoEnableVideoHandler) {
 			$wgMediaHandlers['video/mp4']			= 'EmbedVideo\VideoHandler';
 			$wgMediaHandlers['video/ogg']			= 'EmbedVideo\VideoHandler';
 			$wgMediaHandlers['video/quicktime']		= 'EmbedVideo\VideoHandler';
@@ -99,7 +98,7 @@ class EmbedVideoHooks {
 			$wgMediaHandlers['video/x-matroska']	= 'EmbedVideo\VideoHandler';
 		}
 
-		if ($config->get('EmbedVideoAddFileExtensions')) {
+		if ($wgEmbedVideoAddFileExtensions) {
 			$wgFileExtensions[] = 'flac';
 			$wgFileExtensions[] = 'mkv';
 			$wgFileExtensions[] = 'mov';
@@ -521,19 +520,19 @@ class EmbedVideoHooks {
 	 * @param  ?string $vAlignment	[Optional] Vertical Alignment of the embed container.
 	 * @return array	Encoded representation of input params (to be processed later)
 	 */
-	public static function parseEV($parser, $service = null, $id = null, $dimensions = null, $alignment = null, $description = null, $container = null, $urlArgs = null, $autoResize = null, $vAlignment = null) {
+	public static function parseEV($parser, $service = '', $id = '', $dimensions = '', $alignment = '', $description = '', $container = '', $urlArgs = '', $autoResize = '', $vAlignment = '') {
 		self::resetParameters();
 
-		$service		= trim($service);
-		$id				= trim($id);
-		$alignment		= trim($alignment);
-		$description	= trim($description);
-		$dimensions		= trim($dimensions);
-		$urlArgs		= trim($urlArgs);
+		$service		= trim($service ?? '');
+		$id				= trim($id ?? '');
+		$alignment		= trim($alignment ?? '');
+		$description	= trim($description ?? '');
+		$dimensions		= trim($dimensions ?? '');
+		$urlArgs		= trim($urlArgs ?? '');
 		$width			= null;
 		$height			= null;
 		$autoResize		= (isset($autoResize) && strtolower(trim($autoResize)) == "false") ? false : true;
-		$vAlignment		= trim($vAlignment);
+		$vAlignment		= trim($vAlignment ?? '');
 
 		// I am not using $parser->parseWidthParam() since it can not handle height only.  Example: x100
 		if (stristr($dimensions, 'x')) {
@@ -622,8 +621,8 @@ class EmbedVideoHooks {
 		if ($parser) {
 			// dont call this if parser is null (such as in API usage).
 			$out = $parser->getOutput();
-			$out->addModules('ext.embedVideo');
-			$out->addModuleStyles('ext.embedVideo.styles');
+			$out->addModules(['ext.embedVideo']);
+			$out->addModuleStyles(['ext.embedVideo.styles']);
 		}
 
 		return [

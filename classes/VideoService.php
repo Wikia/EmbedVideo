@@ -528,7 +528,7 @@ class VideoService {
 		'gfycat.com'				=> 'gfycat',
 		'content.jwplatform.com'	=> 'jwplayer',
 		'kickstarter.com'			=> 'kickstarter',
-		'media.ccc.de'				=> 'mideacccde',
+		'media.ccc.de'				=> 'mediacccde',
 		'metacafe.com'				=> 'metacafe',
 		'microsoftstream.com'		=> 'microsoftstream',
 		'mixer.com'					=> 'mixer',
@@ -760,6 +760,9 @@ class VideoService {
 	 */
 	public function parseVideoID($id) {
 		$id = trim($id);
+        if (!array_key_exists('id_regex', $this->service)) {
+			$this->service['id_regex'] = [];
+		}
 		// URL regexes are put into the array first to prevent cases where the ID regexes might accidentally match an incorrect portion of the URL.
 		$regexes = array_merge((array)$this->service['url_regex'], (array)$this->service['id_regex']);
 		if (is_array($regexes) && count($regexes)) {
