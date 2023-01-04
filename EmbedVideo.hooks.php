@@ -520,7 +520,7 @@ class EmbedVideoHooks {
 	 * @param  ?string $vAlignment	[Optional] Vertical Alignment of the embed container.
 	 * @return array	Encoded representation of input params (to be processed later)
 	 */
-	public static function parseEV($parser, $service = '', $id = '', $dimensions = '', $alignment = '', $description = '', $container = '', $urlArgs = '', $autoResize = '', $vAlignment = '') {
+	public static function parseEV($parser, $service = null, $id = null, $dimensions = null, $alignment = null, $description = null, $container = null, $urlArgs = null, $autoResize = null, $vAlignment = null) {
 		self::resetParameters();
 
 		$service		= trim($service ?? '');
