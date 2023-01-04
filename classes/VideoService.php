@@ -759,10 +759,10 @@ class VideoService {
 	 * @return mixed	Parsed Video ID or false on failure.
 	 */
 	public function parseVideoID($id) {
-        $id = trim($id);
-        if (!array_key_exists('id_regex', $this->service)) {
-            $this->service['id_regex'] = [];
-        }
+		$id = trim($id);
+		if (!array_key_exists('id_regex', $this->service)) {
+			$this->service['id_regex'] = [];
+		}
 		// URL regexes are put into the array first to prevent cases where the ID regexes might accidentally match an incorrect portion of the URL.
 		$regexes = array_merge((array)$this->service['url_regex'], (array)$this->service['id_regex']);
 		if (is_array($regexes) && count($regexes)) {
