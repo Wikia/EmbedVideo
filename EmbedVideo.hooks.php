@@ -1,6 +1,6 @@
 <?php
 
-use MediaWiki\MediaWikiServices;
+use \MediaWiki\Hook\ParserFirstCallInitHook;
 
 /**
  * EmbedVideo
@@ -11,7 +11,7 @@ use MediaWiki\MediaWikiServices;
  * @link    https://www.mediawiki.org/wiki/Extension:EmbedVideo
  **/
 
-class EmbedVideoHooks {
+class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Temporary storage for the current service object.
 	 *
@@ -119,7 +119,7 @@ class EmbedVideoHooks {
 	 * @param  Parser $parser	Parser object passed as a reference.
 	 * @return boolean	true
 	 */
-	public static function onParserFirstCallInit(Parser &$parser) {
+	public function onParserFirstCallInit($parser) {
 		$parser->setFunctionHook("ev", "EmbedVideoHooks::parseEV");
 		$parser->setFunctionHook("evt", "EmbedVideoHooks::parseEVT");
 		$parser->setFunctionHook("evp", "EmbedVideoHooks::parseEVP");

@@ -82,10 +82,13 @@
 		"EmbedVideoEnableAudioHandler": true,
 		"FFprobeLocation": "/usr/bin/ffprobe"
 	},
+	"HookHandlers": {
+		"main": {
+			"class": "EmbedVideoHooks"
+		}
+	},
 	"Hooks": {
-		"ParserFirstCallInit": [
-			"EmbedVideoHooks::onParserFirstCallInit"
-		]
+		"ParserFirstCallInit": "main"
 	},
 	"manifest_version": 1
 }
