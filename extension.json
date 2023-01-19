@@ -1,6 +1,6 @@
 {
 	"name": "EmbedVideo",
-	"version": "2.8.0",
+	"version": "2.9.0",
 	"author": [
 		"Jim R. Wilson",
 		"Andrew Whitworth",
@@ -82,10 +82,13 @@
 		"EmbedVideoEnableAudioHandler": true,
 		"FFprobeLocation": "/usr/bin/ffprobe"
 	},
+	"HookHandlers": {
+		"main": {
+			"class": "EmbedVideoHooks"
+		}
+	},
 	"Hooks": {
-		"ParserFirstCallInit": [
-			"EmbedVideoHooks::onParserFirstCallInit"
-		]
+		"ParserFirstCallInit": "main"
 	},
 	"manifest_version": 1
 }
