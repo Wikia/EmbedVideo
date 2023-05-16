@@ -11,6 +11,8 @@
 
 namespace EmbedVideo;
 
+use FSFile;
+
 class FFProbe {
 	/**
 	 * MediaWiki File
@@ -116,6 +118,10 @@ class FFProbe {
 	}
 
 	private function getFilePath() {
+		if ( $this->file instanceof FSFile ) {
+			return $this->file->getPath();
+		}
+
 		return $this->file->getLocalRefPath();
 	}
 
