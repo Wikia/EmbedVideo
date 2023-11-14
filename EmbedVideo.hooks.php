@@ -326,7 +326,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 				$parser,
 				$args['service'],
 				$args['defaultid'],
-				"${w}x${h}",
+				"{$w}x{$h}",
 				$args['alignment'],
 				$args['description'],
 				$args['container'],
