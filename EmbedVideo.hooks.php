@@ -211,7 +211,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 
 		// standardize first 2 arguments into strings that parse_str can handle.
 		$args[0] = "id=" . $video;
-		$args[1] = "linktitle=" . $args[1];
+		$args[1] = "linktitle=" . ( $args[1] ?? '' );
 
 		$options = [];
 		parse_str(implode("&", $args), $options);
