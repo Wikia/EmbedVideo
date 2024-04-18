@@ -98,14 +98,27 @@ class VideoHandler extends AudioHandler {
 	 * @return mixed	An array following the format of PHP getimagesize() internal function or false if not supported.
 	 */
 	public function getImageSize($file, $path) {
-		$probe = new FFProbe($file);
-
-		$stream = $probe->getStream("v:0");
-
-		if ($stream !== false) {
-			return [$stream->getWidth(), $stream->getHeight(), 0, "width=\"{$stream->getWidth()}\" height=\"{$stream->getHeight()}\"", 'bits' => $stream->getBitDepth()];
-		}
 		return [0, 0, 0, 'width="0" height="0"', 'bits' => 0];
+
+//		if ( $file instanceof \LocalFile ) {
+//			return [
+//				$file->getWidth(),
+//				$file->getHeight(),
+//				0,
+//				"width=\"{$file->getWidth()}\" height=\"{$file->getHeight()}\"",
+//				'bits' => $file->getBitDepth(),
+//			];
+//		}
+//
+//
+//		$probe = new FFProbe($file);
+//
+//		$stream = $probe->getStream("v:0");
+//
+//		if ($stream !== false) {
+//			return [$stream->getWidth(), $stream->getHeight(), 0, "width=\"{$stream->getWidth()}\" height=\"{$stream->getHeight()}\"", 'bits' => $stream->getBitDepth()];
+//		}
+//		return [0, 0, 0, 'width="0" height="0"', 'bits' => 0];
 	}
 
 	/**
