@@ -179,10 +179,10 @@ class AudioHandler extends \MediaHandler {
 	public function getDimensionsString($file) {
 		global $wgLang;
 
-		$probe = new FFProbe($file);
-
-		$format = $probe->getFormat();
-		$stream = $probe->getStream("a:0");
+		[
+			'stream' => $stream,
+			'format' => $format,
+		] = $this->getFFProbeResult( $file, "a:0" );
 
 		if ($format === false || $stream === false) {
 			return parent::getDimensionsString($file);
@@ -201,10 +201,10 @@ class AudioHandler extends \MediaHandler {
 	public function getShortDesc($file) {
 		global $wgLang;
 
-		$probe = new FFProbe($file);
-
-		$format = $probe->getFormat();
-		$stream = $probe->getStream("a:0");
+		[
+			'stream' => $stream,
+			'format' => $format,
+		] = $this->getFFProbeResult( $file, "a:0" );
 
 		if ($format === false || $stream === false) {
 			return parent::getGeneralShortDesc($file);
@@ -223,10 +223,10 @@ class AudioHandler extends \MediaHandler {
 	public function getLongDesc($file) {
 		global $wgLang;
 
-		$probe = new FFProbe($file);
-
-		$format = $probe->getFormat();
-		$stream = $probe->getStream("a:0");
+		[
+			'stream' => $stream,
+			'format' => $format,
+		] = $this->getFFProbeResult( $file, "a:0" );
 
 		if ($format === false || $stream === false) {
 			return parent::getGeneralLongDesc($file);
@@ -235,5 +235,36 @@ class AudioHandler extends \MediaHandler {
 		$extension = pathinfo($file->getLocalRefPath(), PATHINFO_EXTENSION);
 
 		return wfMessage('ev_audio_long_desc', strtoupper($extension), $stream->getCodecName(), $wgLang->formatTimePeriod($format->getDuration()), $wgLang->formatBitrate($format->getBitRate()))->text();
+	}
+
+	/**
+	 * Runs FFProbe and caches results in the Main WAN Object cache
+	 *
+	 * @param string|FSFile|File $file The file to work on
+	 * @param string $select Video / Audio track to select
+	 * @return array
+	 */
+	protected function getFFProbeResult( $file, string $select = 'v:0' ): array {
+		$path = $file;
+
+		if ( $file instanceof \File ) {
+			$path = $file->getLocalRefPath();
+		} elseif ( $file instanceof \FSFile ) {
+			$path = $file->getPath();
+		}
+
+		if ( $file === false ) {
+			return [
+				'stream' => false,
+				'format' => false,
+			];
+		}
+
+		$probe = new FFProbe( $path, $file );
+
+		return [
+			'stream' => $probe->getStream( $select ),
+			'format' => $probe->getFormat()
+		];
 	}
 }
