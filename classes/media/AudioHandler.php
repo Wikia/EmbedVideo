@@ -247,9 +247,7 @@ class AudioHandler extends \MediaHandler {
 	protected function getFFProbeResult( $file, string $select = 'v:0' ): array {
 		$path = $file;
 
-		if ( $file instanceof \File ) {
-			$path = $file->getLocalRefPath();
-		} elseif ( $file instanceof \FSFile ) {
+		if ( $file instanceof \File || $file instanceof \FSFile ) {
 			$path = $file->getPath();
 		}
 
