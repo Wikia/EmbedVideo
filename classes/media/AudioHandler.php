@@ -240,22 +240,22 @@ class AudioHandler extends \MediaHandler {
 	/**
 	 * Runs FFProbe and caches results in the Main WAN Object cache
 	 *
-	 * @param string|FSFile|File $file The file to work on
+	 * @param string|FSFile|File|boolean $file The file to work on
 	 * @param string $select Video / Audio track to select
 	 * @return array
 	 */
 	protected function getFFProbeResult( $file, string $select = 'v:0' ): array {
 		$path = $file;
 
-		if ( $file instanceof \File || $file instanceof \FSFile ) {
-			$path = $file->getPath();
-		}
-
 		if ( $file === false ) {
 			return [
 				'stream' => false,
 				'format' => false,
 			];
+		}
+
+		if ( $file instanceof \File || $file instanceof \FSFile ) {
+			$path = $file->getPath();
 		}
 
 		$probe = new FFProbe( $path, $file );

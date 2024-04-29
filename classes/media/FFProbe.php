@@ -19,7 +19,7 @@ class FFProbe {
 	/**
 	 * MediaWiki File
 	 *
-	 * @var \File
+	 * @var \File | \FSFile | string
 	 */
 	private $file;
 
@@ -39,7 +39,8 @@ class FFProbe {
 	 * Main Constructor
 	 *
 	 * @access public
-	 * @param  \File MediaWiki File
+	 * @param  string $filename
+	 * @param  \File | \FSFile | string $file
 	 * @return void
 	 */
 	public function __construct($filename, $file) {
