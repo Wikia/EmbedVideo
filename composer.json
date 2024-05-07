@@ -5,7 +5,7 @@
 	"description": "Adds a parser function embedding video from popular sources.",
 	"license": "MIT",
 	"require": {
-		"php": ">=7.0.0"
+		"php": ">=7.1"
 	},
 	"require-dev": {
 		"hydrawiki/hydrawiki-codesniffer": "1.0.13"

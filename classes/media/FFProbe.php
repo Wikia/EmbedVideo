@@ -12,14 +12,21 @@
 namespace EmbedVideo;
 
 use FSFile;
+use Wikimedia\LightweightObjectStore\ExpirationAwareness;
+use MediaWiki\MediaWikiServices;
 
 class FFProbe {
 	/**
 	 * MediaWiki File
 	 *
-	 * @var \File
+	 * @var \File | \FSFile | string
 	 */
 	private $file;
+
+	/**
+	 * @var string
+	 */
+	private $filename;
 
 	/**
 	 * Meta Data Cache
@@ -32,24 +39,13 @@ class FFProbe {
 	 * Main Constructor
 	 *
 	 * @access public
-	 * @param  \File MediaWiki File
+	 * @param  string $filename
+	 * @param  \File | \FSFile | string $file
 	 * @return void
 	 */
-	public function __construct($file) {
+	public function __construct($filename, $file) {
+		$this->filename = $filename;
 		$this->file = $file;
-	}
-
-	/**
-	 * Return the entire cache of meta data.
-	 *
-	 * @access public
-	 * @return array	Meta Data
-	 */
-	public function getMetaData() {
-		if (!is_array($this->metadata)) {
-			$this->invokeFFProbe();
-		}
-		return $this->metadata;
 	}
 
 	/**
@@ -67,7 +63,7 @@ class FFProbe {
 	 * @return mixed	StreamInfo object or false if does not exist.
 	 */
 	public function getStream($select) {
-		$this->getMetaData();
+		$this->loadMetaData($select);
 
 		$types = [
 			'v'	=> 'video',
@@ -108,7 +104,7 @@ class FFProbe {
 	 * @return mixed	FormatInfo object or false if does not exist.
 	 */
 	public function getFormat() {
-		$this->getMetaData();
+		$this->loadMetaData();
 
 		if (!isset($this->metadata['format'])) {
 			return false;
@@ -129,14 +125,13 @@ class FFProbe {
 	 * Invoke ffprobe on the command line.
 	 *
 	 * @access private
-	 * @return boolean	Success
+	 * @return array	Meta Data
 	 */
 	private function invokeFFProbe() {
 		global $wgFFprobeLocation;
 
 		if (!file_exists($wgFFprobeLocation)) {
-			$this->metadata = [];
-			return false;
+			return [];
 		}
 
 		$json = shell_exec(escapeshellcmd($wgFFprobeLocation . ' -v quiet -print_format json -show_format -show_streams ') . escapeshellarg($this->getFilePath()));
@@ -144,12 +139,44 @@ class FFProbe {
 		$metadata = @json_decode($json, true);
 
 		if (is_array($metadata)) {
-			$this->metadata = $metadata;
-		} else {
-			$this->metadata = [];
-			return false;
+			return $metadata;
 		}
-		return true;
+
+		return [];
+	}
+
+	public function loadMetaData( string $select = 'v:0' ): bool {
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
+		$cacheKey = $cache->makeGlobalKey( 'EmbedVideo', 'ffprobe', $this->filename, $select );
+		$ttl = ( $this->file instanceof \File || is_string( $this->file ) )
+			? ExpirationAwareness::TTL_INDEFINITE : ExpirationAwareness::TTL_MINUTE;
+
+		$result = $cache->getWithSetCallback(
+			$cacheKey,
+			$ttl,
+			function ( $old, &$ttl ) {
+				$result = $this->invokeFFProbe();
+
+				if ( $result === null ) {
+					$ttl = ExpirationAwareness::TTL_UNCACHEABLE;
+
+					return $old;
+				}
+
+				return $result;
+			}
+		);
+
+		if ( is_array( $result ) ) {
+			$this->metadata = [
+				'streams' => $result['streams'],
+				'format' => $result['format'],
+			];
+
+			return true;
+		}
+
+		return false;
 	}
 }
 

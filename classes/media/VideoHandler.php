@@ -98,9 +98,9 @@ class VideoHandler extends AudioHandler {
 	 * @return mixed	An array following the format of PHP getimagesize() internal function or false if not supported.
 	 */
 	public function getImageSize($file, $path) {
-		$probe = new FFProbe($file);
-
-		$stream = $probe->getStream("v:0");
+		[
+			'stream' => $stream,
+		] = $this->getFFProbeResult( $file );
 
 		if ($stream !== false) {
 			return [$stream->getWidth(), $stream->getHeight(), 0, "width=\"{$stream->getWidth()}\" height=\"{$stream->getHeight()}\"", 'bits' => $stream->getBitDepth()];
@@ -141,10 +141,10 @@ class VideoHandler extends AudioHandler {
 	public function getDimensionsString($file) {
 		global $wgLang;
 
-		$probe = new FFProbe($file);
-
-		$format = $probe->getFormat();
-		$stream = $probe->getStream("v:0");
+		[
+			'stream' => $stream,
+			'format' => $format,
+		] = $this->getFFProbeResult( $file );
 
 		if ($format === false || $stream === false) {
 			return parent::getDimensionsString($file);
@@ -163,10 +163,10 @@ class VideoHandler extends AudioHandler {
 	public function getShortDesc($file) {
 		global $wgLang;
 
-		$probe = new FFProbe($file);
-
-		$format = $probe->getFormat();
-		$stream = $probe->getStream("v:0");
+		[
+			'stream' => $stream,
+			'format' => $format,
+		] = $this->getFFProbeResult( $file );
 
 		if ($format === false || $stream === false) {
 			return parent::getGeneralShortDesc($file);
@@ -185,10 +185,10 @@ class VideoHandler extends AudioHandler {
 	public function getLongDesc($file) {
 		global $wgLang;
 
-		$probe = new FFProbe($file);
-
-		$format = $probe->getFormat();
-		$stream = $probe->getStream("v:0");
+		[
+			'stream' => $stream,
+			'format' => $format,
+		] = $this->getFFProbeResult( $file );
 
 		if ($format === false || $stream === false) {
 			return parent::getGeneralLongDesc($file);
