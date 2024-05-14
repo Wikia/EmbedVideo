@@ -917,7 +917,9 @@ class VideoService {
 
 		if (is_array($_args)) {
 			foreach ($_args as $rawPair) {
-				list($key, $value) = explode("=", $rawPair, 2);
+				$parts = explode("=", $rawPair, 2);
+				$key = $parts[0];
+				$value = $parts[1] ?? null;
 				if (empty($key) || ($value === null || $value === '')) {
 					return false;
 				}
@@ -957,6 +959,7 @@ class VideoService {
 	 * @return mixed	Integer ratio or false if not set.
 	 */
 	public function getDefaultRatio() {
-		return ($this->service['default_ratio'] > 0 ? $this->service['default_ratio'] : false);
+		$defaultRatio = $this->service['default_ratio'] ?? 0;
+		return $defaultRatio > 0 ? $defaultRatio : false;
 	}
 }
