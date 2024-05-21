@@ -65,7 +65,7 @@ class AudioHandler extends \MediaHandler {
 		$magnitude = [1, 60, 3600, 86400];
 		$seconds = 0;
 		foreach ($parts as $index => $part) {
-			$seconds += $part * $magnitude[$index];
+			$seconds += (float)$part * $magnitude[$index];
 		}
 		return $seconds;
 	}
