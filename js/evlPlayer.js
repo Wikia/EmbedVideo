@@ -27,7 +27,8 @@
 					content = "There was an error while loading this video";
 				}
 				if (data.notice) {
-					content = content + "<small>" + encodeURIComponent(data.notice) + "</small>";
+					const noticeText = $("<small>").text(data.notice);
+					content += noticeText.prop('outerHTML');
 				}
 				container.html(content);
 				window.autoResizer();
