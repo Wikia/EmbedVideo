@@ -284,6 +284,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		], $options['linktitle']);
 
 		$parser->getOutput()->addModules(['ext.embedVideo-evl', 'ext.embedVideo.styles']);
+		$parser->getOutput()->addModules(['ext.embedVideo-error']);
 
 		return [$link, 'noparse' => true, 'isHTML' => true];
 	}
