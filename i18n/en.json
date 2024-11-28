@@ -28,5 +28,6 @@
 	"apihelp-embedvideo-param-description": "Description of video",
 	"apihelp-embedvideo-param-container": "Accepts frame, or leave empty",
 	"apihelp-embedvideo-param-urlargs": "Additional arguments to pass in the video url (for some services)",
-	"apihelp-embedvideo-param-autoresize": "Auto resize video? (true or false)"
+	"apihelp-embedvideo-param-autoresize": "Auto resize video? (true or false)",
+	"ev-fandom-twitch-error-message": "Twitch no longer allows embedding of videos on Fandom. We're sorry for the inconvenience."
 }
