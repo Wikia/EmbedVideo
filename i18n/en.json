@@ -5,6 +5,7 @@
 	"embedvideo_description": "Adds a parser function embedding video from popular sources.",
 	"error_embedvideo_missingparams": "EmbedVideo is missing a required parameter.",
 	"error_embedvideo_service": "EmbedVideo does not recognize the video service \"$1\".",
+	"error_embedvideo_service_disabled": "EmbedVideo does not allow embedding of videos from the service \"$1\".",
 	"error_embedvideo_id": "EmbedVideo received the bad id \"$2\" for the service \"$1\".",
 	"error_embedvideo_width": "EmbedVideo received the bad width parameter \"$1\".",
 	"error_embedvideo_height": "EmbedVideo received the bad height parameter \"$1\".",
@@ -28,6 +29,5 @@
 	"apihelp-embedvideo-param-description": "Description of video",
 	"apihelp-embedvideo-param-container": "Accepts frame, or leave empty",
 	"apihelp-embedvideo-param-urlargs": "Additional arguments to pass in the video url (for some services)",
-	"apihelp-embedvideo-param-autoresize": "Auto resize video? (true or false)",
-	"ev-fandom-twitch-error-message": "Twitch no longer allows embedding of videos on Fandom. We're sorry for the inconvenience."
+	"apihelp-embedvideo-param-autoresize": "Auto resize video? (true or false)"
 }
