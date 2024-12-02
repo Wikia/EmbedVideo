@@ -120,6 +120,8 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 * @return boolean	true
 	 */
 	public function onParserFirstCallInit($parser) {
+		global $wgEmbedVideoEnabledServices;
+
 		$parser->setFunctionHook("ev", "EmbedVideoHooks::parseEV");
 		$parser->setFunctionHook("evt", "EmbedVideoHooks::parseEVT");
 		$parser->setFunctionHook("evp", "EmbedVideoHooks::parseEVP");
@@ -138,6 +140,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		// smart handling of service name tags (if they aren't already implamented)
 		$tags = $parser->getTags();
 		$services = \EmbedVideo\VideoService::getAvailableServices();
+		$wgEmbedVideoEnabledServices = $services;
 		$create = array_diff($services, $tags);
 		// We now have a list of services we can create tags for that aren't already implamented
 		foreach ($create as $service) {
@@ -284,7 +287,6 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		], $options['linktitle']);
 
 		$parser->getOutput()->addModules(['ext.embedVideo-evl', 'ext.embedVideo.styles']);
-		$parser->getOutput()->addModules(['ext.embedVideo-error']);
 
 		return [$link, 'noparse' => true, 'isHTML' => true];
 	}
@@ -523,6 +525,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 */
 	public static function parseEV($parser, $service = null, $id = null, $dimensions = null, $alignment = null, $description = null, $container = null, $urlArgs = null, $autoResize = null, $vAlignment = null) {
 		self::resetParameters();
+		global $wgEmbedVideoEnabledServices;
 
 		$service		= trim($service ?? '');
 		$id				= trim($id ?? '');
@@ -544,28 +547,14 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		}
 
 		/************************************/
-		/* Twitch Fixes                     */
-		/************************************/
-		// Add parent attribute for Twitch embeds
-		if ($service == 'twitch' || $service == 'twitchclip' || $service == 'twitchvod') {
-			global $wgServerName;
-			if (!isset($urlArgs) || empty($urlArgs)) {
-				// Set the url args to the parent domain
-				$urlArgs = "parent=$wgServerName";
-			} else {
-				// Break down the url args and inject the parent
-				$urlargsArr = [];
-				parse_str($urlArgs, $urlargsArr);
-				$urlargsArr['parent'] = $wgServerName;
-				$urlArgs = http_build_query($urlargsArr);
-			}
-		}
-
-		/************************************/
 		/* Error Checking                   */
 		/************************************/
 		if (!$service || !$id) {
 			return self::error('missingparams', $service, $id);
+		}
+
+		if ($wgEmbedVideoEnabledServices && !in_array($service, $wgEmbedVideoEnabledServices)) {
+			return self::error('service_disabled', $service);
 		}
 
 		self::$service = \EmbedVideo\VideoService::newFromName($service);
@@ -624,6 +613,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 			$out = $parser->getOutput();
 			$out->addModules(['ext.embedVideo']);
 			$out->addModuleStyles(['ext.embedVideo.styles']);
+			$out->addModules(['ext.embedVideo-error']);
 		}
 
 		return [
