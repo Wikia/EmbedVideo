@@ -7,6 +7,8 @@
 			.message('ev-fandom-twitch-error-message')
 			.escaped()}</p>`;
 
+		console.log('-------------------', evSelector);
+
 		if (!$twitchEmbeds.length) {
 			return;
 		}
