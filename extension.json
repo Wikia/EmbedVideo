@@ -62,20 +62,6 @@
 				"ext.embedVideo"
 			]
 		},
-		"ext.embedVideo-error": {
-			"scripts": [
-				"js/errorOverlay.js"
-			],
-			"position": "top",
-			"targets": [
-				"desktop",
-				"mobile"
-			],
-			"dependencies": [
-				"mediawiki.api",
-				"ext.embedVideo"
-			]
-		},
 		"ext.embedVideo.styles": {
 			"styles": [
 				"css/embedvideo.css"

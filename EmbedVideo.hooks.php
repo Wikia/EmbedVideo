@@ -613,7 +613,6 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 			$out = $parser->getOutput();
 			$out->addModules(['ext.embedVideo']);
 			$out->addModuleStyles(['ext.embedVideo.styles']);
-			$out->addModules(['ext.embedVideo-error']);
 		}
 
 		return [

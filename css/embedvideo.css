@@ -59,18 +59,3 @@ a.vplink {
 a.vplink:hover {
 	background-image: url(../img/play-hover.png);
 }
-
-.ev-fandom-error-overlay {
-	background-color: #000;
-	position: relative;
-}
-
-.ev-fandom-error-message {
-	color: #FFFFFFFF;
-	padding: 10px;
-	position: absolute;
-	text-align: center;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 100%;
-}
