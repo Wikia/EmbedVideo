@@ -1,6 +1,8 @@
 (function(mw, $, window) {
 	$(function() {
 		api = new mw.Api();
+		window?.autoResizer?.();
+		window.addEventListener('FandomDesktopContentSize', () => window?.autoResizer?.());
 		$('a.embedvideo-evl').click(function(e){
 			e.preventDefault();
 
