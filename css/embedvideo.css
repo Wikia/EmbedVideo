@@ -59,3 +59,7 @@ a.vplink {
 a.vplink:hover {
 	background-image: url(../img/play-hover.png);
 }
+
+evl {
+	display: flex;
+}
