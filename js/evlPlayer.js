@@ -1,6 +1,9 @@
 (function(mw, $, window) {
 	$(function() {
 		api = new mw.Api();
+		/**
+		 * CATS-1635 - resize EmbedVideo's on collapse/expand button click
+		 */
 		window?.autoResizer?.();
 		window.addEventListener('FandomDesktopContentSize', () => window?.autoResizer?.());
 		$('a.embedvideo-evl').click(function(e){
