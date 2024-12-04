@@ -81,9 +81,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		}
 
 		if ($wgEmbedVideoEnableAudioHandler) {
-			$wgMediaHandlers['application/ogg']		= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/flac']			= 'EmbedVideo\AudioHandler';
-			$wgMediaHandlers['audio/ogg']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/mpeg']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/mp4']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/wav']			= 'EmbedVideo\AudioHandler';
@@ -92,7 +90,6 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		}
 		if ($wgEmbedVideoEnableVideoHandler) {
 			$wgMediaHandlers['video/mp4']			= 'EmbedVideo\VideoHandler';
-			$wgMediaHandlers['video/ogg']			= 'EmbedVideo\VideoHandler';
 			$wgMediaHandlers['video/quicktime']		= 'EmbedVideo\VideoHandler';
 			$wgMediaHandlers['video/webm']			= 'EmbedVideo\VideoHandler';
 			$wgMediaHandlers['video/x-matroska']	= 'EmbedVideo\VideoHandler';
@@ -105,7 +102,6 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 			$wgFileExtensions[] = 'mp3';
 			$wgFileExtensions[] = 'mp4';
 			$wgFileExtensions[] = 'oga';
-			$wgFileExtensions[] = 'ogg';
 			$wgFileExtensions[] = 'ogv';
 			$wgFileExtensions[] = 'wav';
 			$wgFileExtensions[] = 'webm';
