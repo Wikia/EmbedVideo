@@ -314,7 +314,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 			'id' => 'vplayerbox-' . $pid,
 			'class' => 'embedvideo-evlbox vplayerbox evl' . $class,
 			'data-size' => $w . 'x' . $h,
-			'style' => $style,
+			'style' => 'display:flex;' . $style,
 		], $content);
 
 		if ($args['defaultid'] && $args['service']) {
