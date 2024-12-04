@@ -312,7 +312,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 
 		$div = Html::rawElement('div', [
 			'id' => 'vplayerbox-' . $pid,
-			'class' => 'embedvideo-evlbox vplayerbox evl' . $class,
+			'class' => 'embedvideo-evlbox vplayerbox' . $class,
 			'data-size' => $w . 'x' . $h,
 			'style' => 'display:flex;' . $style,
 		], $content);
