@@ -375,42 +375,6 @@ class VideoService {
 				'#^([\d\w-%]+)$#is'
 			]
 		],
-		'twitch' => [
-			'embed'			=> '<iframe title="%4$s" src="https://player.twitch.tv/?channel=%1$s&%5$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
-			'default_width'	=> 640,
-			'default_ratio'	=> 1.64021164021164, // (620 / 378)
-			'https_enabled'	=> false,
-			'url_regex'		=> [
-				'#twitch\.tv/([\d\w-]+)(?:/\S+?)?#is'
-			],
-			'id_regex'		=> [
-				'#^([\d\w-]+)$#is'
-			]
-		],
-		'twitchclip' => [
-			'embed'			=> '<iframe title="%4$s" src="https://clips.twitch.tv/embed?autoplay=false&clip=%1$s&%5$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
-			'default_width'	=> 640,
-			'default_ratio'	=> 1.64021164021164, // (620 / 378)
-			'https_enabled'	=> false,
-			'url_regex'		=> [
-				'#twitch\.tv/(?:[\d\w-]+)/(?:clip/)([\d\w-]+)?#is'
-			],
-			'id_regex'		=> [
-				'#^([\d\w-]+)$#is'
-			]
-		],
-		'twitchvod' => [
-			'embed'			=> '<iframe title="%4$s" src="https://player.twitch.tv/?autoplay=false&video=%1$s&%5$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
-			'default_width'	=> 640,
-			'default_ratio'	=> 1.64021164021164, // (620 / 378)
-			'https_enabled'	=> false,
-			'url_regex'		=> [
-				'#twitch\.tv/videos/([\d\w-]+)(?:/\S+?)?#is'
-			],
-			'id_regex'		=> [
-				'#^([\d\w-]+)$#is'
-			]
-		],
 		'videomaten' => [
 			'embed'			=> '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="%2$d" height="%3$d" id="videomat" align="middle"><param name="allowScriptAccess" value="sameDomain" /><param name="movie" value="http://89.160.51.62/recordMe/play.swf?id=%1$s" /><param name="loop" value="false" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" /><embed title="%4$s" src="http://89.160.51.62/recordMe/play.swf?id=%1$s" loop="false" quality="high" bgcolor="#ffffff" width="%2$d" height="%3$d" name="videomat" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object>',
 			'default_ratio'	=> 1.5, // (300 / 200)
@@ -544,7 +508,6 @@ class VideoService {
 		'tubitv.com'				=> 'tubitv',
 		'tudou.com'					=> 'todou',
 		'tvpot.daum.net'			=> 'tvpot',
-		'twitch.tv'					=> ['twitch', 'twitchclip', 'twitchvod'],
 		'89.160.51.62'				=> 'videomaten',
 		'vimeo.com'					=> 'vimeo',
 		'vine.co'					=> 'vine',

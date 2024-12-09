@@ -81,9 +81,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		}
 
 		if ($wgEmbedVideoEnableAudioHandler) {
-			$wgMediaHandlers['application/ogg']		= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/flac']			= 'EmbedVideo\AudioHandler';
-			$wgMediaHandlers['audio/ogg']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/mpeg']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/mp4']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/wav']			= 'EmbedVideo\AudioHandler';
@@ -92,7 +90,6 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		}
 		if ($wgEmbedVideoEnableVideoHandler) {
 			$wgMediaHandlers['video/mp4']			= 'EmbedVideo\VideoHandler';
-			$wgMediaHandlers['video/ogg']			= 'EmbedVideo\VideoHandler';
 			$wgMediaHandlers['video/quicktime']		= 'EmbedVideo\VideoHandler';
 			$wgMediaHandlers['video/webm']			= 'EmbedVideo\VideoHandler';
 			$wgMediaHandlers['video/x-matroska']	= 'EmbedVideo\VideoHandler';
@@ -105,7 +102,6 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 			$wgFileExtensions[] = 'mp3';
 			$wgFileExtensions[] = 'mp4';
 			$wgFileExtensions[] = 'oga';
-			$wgFileExtensions[] = 'ogg';
 			$wgFileExtensions[] = 'ogv';
 			$wgFileExtensions[] = 'wav';
 			$wgFileExtensions[] = 'webm';
@@ -318,7 +314,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 			'id' => 'vplayerbox-' . $pid,
 			'class' => 'embedvideo-evlbox vplayerbox' . $class,
 			'data-size' => $w . 'x' . $h,
-			'style' => $style,
+			'style' => 'display:flex;' . $style,
 		], $content);
 
 		if ($args['defaultid'] && $args['service']) {
@@ -522,6 +518,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 */
 	public static function parseEV($parser, $service = null, $id = null, $dimensions = null, $alignment = null, $description = null, $container = null, $urlArgs = null, $autoResize = null, $vAlignment = null) {
 		self::resetParameters();
+		global $wgEmbedVideoDisabledServices;
 
 		$service		= trim($service ?? '');
 		$id				= trim($id ?? '');
@@ -543,28 +540,14 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		}
 
 		/************************************/
-		/* Twitch Fixes                     */
-		/************************************/
-		// Add parent attribute for Twitch embeds
-		if ($service == 'twitch' || $service == 'twitchclip' || $service == 'twitchvod') {
-			global $wgServerName;
-			if (!isset($urlArgs) || empty($urlArgs)) {
-				// Set the url args to the parent domain
-				$urlArgs = "parent=$wgServerName";
-			} else {
-				// Break down the url args and inject the parent
-				$urlargsArr = [];
-				parse_str($urlArgs, $urlargsArr);
-				$urlargsArr['parent'] = $wgServerName;
-				$urlArgs = http_build_query($urlargsArr);
-			}
-		}
-
-		/************************************/
 		/* Error Checking                   */
 		/************************************/
 		if (!$service || !$id) {
 			return self::error('missingparams', $service, $id);
+		}
+
+		if ($wgEmbedVideoDisabledServices && in_array($service, $wgEmbedVideoDisabledServices)) {
+			return self::error('service_disabled', $service);
 		}
 
 		self::$service = \EmbedVideo\VideoService::newFromName($service);
