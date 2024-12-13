@@ -81,7 +81,9 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		}
 
 		if ($wgEmbedVideoEnableAudioHandler) {
+			$wgMediaHandlers['application/ogg'] 	= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/flac']			= 'EmbedVideo\AudioHandler';
+			$wgMediaHandlers['audio/ogg'] 			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/mpeg']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/mp4']			= 'EmbedVideo\AudioHandler';
 			$wgMediaHandlers['audio/wav']			= 'EmbedVideo\AudioHandler';
