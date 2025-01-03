@@ -14,7 +14,7 @@
 $messages = [];
 if (!function_exists('wfJsonI18nShim9b746919b3007182')) {
 
-	function wfJsonI18nShim9b746919b3007182($cache, $code, &$cachedData) {
+	function wfJsonI18nShim9b746919b3007182($cache, $code, &$cachedData): bool {
 		$codeSequence = array_merge([$code], $cachedData['fallbackSequence']);
 		foreach ($codeSequence as $csCode) {
 			$fileName = __DIR__ . "/i18n/$csCode.json";
