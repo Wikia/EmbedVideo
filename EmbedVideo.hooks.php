@@ -161,7 +161,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 * @return array|null
 	 */
 	public static function __callStatic( $name, $args ): ?array {
-		if ( substr( $name, 0, 15 ) == "parseServiceTag" ) {
+		if ( str_starts_with( $name, "parseServiceTag" ) ) {
 			$service = str_replace( "parseServiceTag", "", $name );
 			return self::parseServiceTag( $service, $args[0], $args[1], $args[2], $args[3] );
 		}
@@ -800,7 +800,6 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Error Handler
 	 *
-	 * @private
 	 * @param string $type [Optional] Error Type
 	 * @param mixed ...$arguments [...] Multiple arguments to be retrieved with func_get_args().
 	 * @return array Printable Error Message
