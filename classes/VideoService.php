@@ -10,7 +10,7 @@
 
 namespace EmbedVideo;
 
-use Exception;
+use RuntimeException;
 
 class VideoService {
 	/**
@@ -612,7 +612,7 @@ class VideoService {
 	 *
 	 * @return array $services
 	 */
-	public static function getAvailableServices() {
+	public static function getAvailableServices(): array {
 		return array_keys( self::$services );
 	}
 
@@ -621,11 +621,11 @@ class VideoService {
 	 *
 	 * @param string $service Name
 	 * @param mixed $args
-	 * @throws Exception
+	 * @throws RuntimeException
 	 */
 	public static function addService( string $service, mixed $args ): void {
 		if ( isset( self::$services[$service] ) ) {
-			throw new Exception( "Service already already exists: $service" );
+			throw new RuntimeException( "Service already already exists: $service" );
 		}
 		self::$services[$service] = $args;
 	}

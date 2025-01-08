@@ -7,40 +7,36 @@
  * @license MIT
  * @package EmbedVideo
  * @link    https://www.mediawiki.org/wiki/Extension:EmbedVideo
- **/
+ */
 
 namespace EmbedVideo;
 
-use Html;
+use File;
+use MediaTransformOutput;
+use MediaWiki\Html\Html;
 
-class VideoTransformOutput extends \MediaTransformOutput {
-	/** @var array */
-	private $parameters;
-
+class VideoTransformOutput extends MediaTransformOutput {
 	/**
 	 * Main Constructor
 	 *
-	 * @access public
-	 * @param  \File $file
-	 * @param  array $parameters	Parameters for constructing HTML.
+	 * @param File $file
+	 * @param array $parameters Parameters for constructing HTML.
 	 * @return void
 	 */
-	public function __construct($file, $parameters) {
+	public function __construct( $file, private $parameters ) {
 		$this->file = $file;
-		$this->parameters = $parameters;
-		$this->width = (isset($parameters['width']) ? $parameters['width'] : null);
-		$this->height = (isset($parameters['height']) ? $parameters['height'] : null);
+		$this->width = ( $this->parameters['width'] ?? null );
+		$this->height = ( $this->parameters['height'] ?? null );
 		$this->path = null;
 		$this->lang = false;
-		$this->page = $parameters['page'];
+		$this->page = $this->parameters['page'];
 		$this->url = $file->getFullUrl();
 	}
 
 	/**
 	 * Fetch HTML for this transform output
 	 *
-	 * @access public
-	 * @param  array $options Associative array of options. Boolean options
+	 * @param array $options Associative array of options. Boolean options
 	 *                        should be indicated with a value of true for true, and false or
 	 *                        absent for false.
 	 *                        alt                Alternate text or caption
@@ -51,43 +47,43 @@ class VideoTransformOutput extends \MediaTransformOutput {
 	 *                        valign             vertical-align property, if the output is an inline element
 	 *                        img-class          Class applied to the "<img>" tag, if there is such a tag
 	 *
-	 * @return string	HTML
+	 * @return string HTML
 	 */
-	public function toHtml($options = []) {
+	public function toHtml( $options = [] ): string {
 		$parameters = $this->parameters;
 
 		$style = [];
 		$style[] = "max-width: 100%;";
 		$style[] = "max-height: 100%;";
-		if (empty($options['no-dimensions'])) {
+		if ( empty( $options['no-dimensions'] ) ) {
 			$parameters['width'] = $this->getWidth();
 			$parameters['height'] = $this->getHeight();
 			$style[] = "width: {$this->getWidth()}px;";
 			$style[] = "height: {$this->getHeight()}px;";
 		}
 
-		if (!empty($options['valign'])) {
+		if ( !empty( $options['valign'] ) ) {
 			$style[] = "vertical-align: {$options['valign']};";
 		}
 
-		if (!empty($options['img-class'])) {
+		if ( !empty( $options['img-class'] ) ) {
 			$class = $options['img-class'];
 		}
 
-		if (!isset($parameters['start'])) {
+		if ( !isset( $parameters['start'] ) ) {
 			$parameters['start'] = null;
 		}
-		if (!isset($parameters['end'])) {
+		if ( !isset( $parameters['end'] ) ) {
 			$parameters['end'] = null;
 		}
 
 		$inOut = false;
-		if ($parameters['start'] !== $parameters['end']) {
-			if ($parameters['start'] !== false) {
+		if ( $parameters['start'] !== $parameters['end'] ) {
+			if ( $parameters['start'] !== false ) {
 				$inOut[] = $parameters['start'];
 			}
 
-			if ($parameters['end'] !== false) {
+			if ( $parameters['end'] !== false ) {
 				$inOut[] = $parameters['end'];
 			}
 		}
@@ -103,7 +99,7 @@ class VideoTransformOutput extends \MediaTransformOutput {
 		}
 
 		return Html::rawElement( 'video', [
-			'src' => $this->url . ($inOut !== false ? '#t=' . implode(',', $inOut) : ''),
+			'src' => $this->url . ( $inOut !== false ? '#t=' . implode( ',', $inOut ) : '' ),
 			'width' => $this->getWidth(),
 			'height' => $this->getHeight(),
 			'class' => $class ?? false,
