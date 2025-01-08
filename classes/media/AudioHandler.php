@@ -20,7 +20,7 @@ class AudioHandler extends MediaHandler {
 	 * Get an associative array mapping magic word IDs to parameter names.
 	 * Will be used by the parser to identify parameters.
 	 */
-	public function getParamMap() {
+	public function getParamMap(): array {
 		return [
 			'img_width'	=> 'width',
 			'ev_start'	=> 'start',
@@ -36,7 +36,7 @@ class AudioHandler extends MediaHandler {
 	 * @param string $name
 	 * @param mixed $value
 	 */
-	public function validateParam( $name, $value ) {
+	public function validateParam( $name, $value ): bool {
 		if ( $name === 'width' ) {
 			return $value > 0;
 		}
@@ -55,9 +55,9 @@ class AudioHandler extends MediaHandler {
 	 * strtotime() will not handle this nicely since 1:30 could be one minute and thirty seconds OR one hour and thirty minutes.
 	 *
 	 * @param string $time Time formatted as one of: ss, :ss, mm:ss, hh:mm:ss, or dd:hh:mm:ss
-	 * @return mixed Integer seconds or false for a bad format.
+	 * @return float|int|false Integer seconds or false for a bad format.
 	 */
-	public function parseTimeString( $time ) {
+	public function parseTimeString( $time ): float|int|false {
 		$parts = explode( ":", $time );
 		if ( $parts === false ) {
 			return false;
@@ -75,20 +75,20 @@ class AudioHandler extends MediaHandler {
 	/**
 	 * Merge a parameter array into a string appropriate for inclusion in filenames
 	 *
-	 * @param array $parameters Array of parameters that have been through normaliseParams.
+	 * @param array $params Array of parameters that have been through normaliseParams.
 	 * @return string
 	 */
-	public function makeParamString( $parameters ) {
+	public function makeParamString( $params ): string {
 		return ''; // Width does not matter to video or audio.
 	}
 
 	/**
 	 * Parse a param string made with makeParamString back into an array
 	 *
-	 * @param string $string The parameter string without file name (e.g. 122px)
-	 * @return mixed Array of parameters or false on failure.
+	 * @param string $str The parameter string without file name (e.g. 122px)
+	 * @return array|false Array of parameters or false on failure.
 	 */
-	public function parseParamString( $string ) {
+	public function parseParamString( $str ): array|false {
 		return []; // Nothing to parse.  See makeParamString above.
 	}
 
@@ -142,9 +142,9 @@ class AudioHandler extends MediaHandler {
 	 *
 	 * @param File $file The file object, or false if there isn't one
 	 * @param string $path The filename
-	 * @return mixed An array following the format of PHP getimagesize() internal function or false if not supported.
+	 * @return array|false An array following the format of PHP getimagesize() internal function or false if not supported.
 	 */
-	public function getImageSize( $file, $path ) {
+	public function getImageSize( $file, $path ): array|false {
 		return false;
 	}
 
@@ -159,9 +159,9 @@ class AudioHandler extends MediaHandler {
 	 *                          Note: These parameters have *not* gone through
 	 *                          $this->normaliseParams()
 	 * @param int $flags A bitfield, may contain self::TRANSFORM_LATER
-	 * @return \MediaTransformOutput
+	 * @return VideoTransformOutput|AudioTransformOutput
 	 */
-	public function doTransform( $file, $dstPath, $dstUrl, $params, $flags = 0 ) {
+	public function doTransform( $file, $dstPath, $dstUrl, $params, $flags = 0 ): VideoTransformOutput|AudioTransformOutput {
 		$this->normaliseParams( $file, $params );
 
 		return new AudioTransformOutput( $file, $params );
@@ -173,7 +173,7 @@ class AudioHandler extends MediaHandler {
 	 * @param File $file
 	 * @return string Dimensions
 	 */
-	public function getDimensionsString( $file ) {
+	public function getDimensionsString( $file ): string {
 		global $wgLang;
 
 		[
@@ -194,7 +194,7 @@ class AudioHandler extends MediaHandler {
 	 * @param File $file
 	 * @return string
 	 */
-	public function getShortDesc( $file ) {
+	public function getShortDesc( $file ): string {
 		global $wgLang;
 
 		[
@@ -219,7 +219,7 @@ class AudioHandler extends MediaHandler {
 	 * @param File $file
 	 * @return string
 	 */
-	public function getLongDesc( $file ) {
+	public function getLongDesc( $file ): string {
 		global $wgLang;
 
 		[

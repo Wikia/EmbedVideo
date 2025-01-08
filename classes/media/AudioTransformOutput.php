@@ -82,7 +82,7 @@ class AudioTransformOutput extends MediaTransformOutput {
 		$inOut = false;
 		if ( $parameters['start'] !== $parameters['end'] ) {
 			if ( isset( $parameters['start'] ) && $parameters['start'] !== false ) {
-				$inOut[] = $parameters['start'];
+				$inOut = [ $parameters['start'] ];
 			}
 
 			if ( isset( $parameters['end'] ) && $parameters['end'] !== false ) {

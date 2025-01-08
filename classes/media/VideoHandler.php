@@ -22,7 +22,7 @@ class VideoHandler extends AudioHandler {
 	 * @param string $name
 	 * @param mixed $value
 	 */
-	public function validateParam( $name, $value ) {
+	public function validateParam( $name, $value ): bool {
 		if ( $name === 'width' || $name === 'height' ) {
 			return $value > 0;
 		}
@@ -126,9 +126,9 @@ class VideoHandler extends AudioHandler {
 	 *                          Note: These parameters have *not* gone through
 	 *                          $this->normaliseParams()
 	 * @param int $flags A bitfield, may contain self::TRANSFORM_LATER
-	 * @return VideoTransformOutput
+	 * @return VideoTransformOutput|AudioTransformOutput
 	 */
-	public function doTransform( $file, $dstPath, $dstUrl, $params, $flags = 0 ): VideoTransformOutput {
+	public function doTransform( $file, $dstPath, $dstUrl, $params, $flags = 0 ): VideoTransformOutput|AudioTransformOutput {
 		$this->normaliseParams( $file, $params );
 
 		if ( !( $flags & self::TRANSFORM_LATER ) ) {
@@ -144,7 +144,7 @@ class VideoHandler extends AudioHandler {
 	 * @param File $file
 	 * @return string Dimensions
 	 */
-	public function getDimensionsString( $file ) {
+	public function getDimensionsString( $file ): string {
 		global $wgLang;
 
 		[
@@ -170,7 +170,7 @@ class VideoHandler extends AudioHandler {
 	 * @param File $file
 	 * @return string
 	 */
-	public function getShortDesc( $file ) {
+	public function getShortDesc( $file ): string {
 		global $wgLang;
 
 		[
@@ -197,7 +197,7 @@ class VideoHandler extends AudioHandler {
 	 * @param File $file
 	 * @return string
 	 */
-	public function getLongDesc( $file ) {
+	public function getLongDesc( $file ): string {
 		global $wgLang;
 
 		[

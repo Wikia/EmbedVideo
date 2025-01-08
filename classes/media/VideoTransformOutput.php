@@ -80,7 +80,7 @@ class VideoTransformOutput extends MediaTransformOutput {
 		$inOut = false;
 		if ( $parameters['start'] !== $parameters['end'] ) {
 			if ( $parameters['start'] !== false ) {
-				$inOut[] = $parameters['start'];
+				$inOut = [ $parameters['start'] ];
 			}
 
 			if ( $parameters['end'] !== false ) {

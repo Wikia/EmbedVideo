@@ -28,7 +28,7 @@ class FFProbe {
 	 * Main Constructor
 	 *
 	 * @param string $filename
-	 * @param \File | \FSFile | string $file
+	 * @param File | FSFile | string $file
 	 * @return void
 	 */
 	public function __construct(
@@ -91,9 +91,9 @@ class FFProbe {
 	/**
 	 * Get the FormatInfo object.
 	 *
-	 * @return mixed FormatInfo object or false if does not exist.
+	 * @return false|FormatInfo FormatInfo object or false if does not exist.
 	 */
-	public function getFormat(): false|\EmbedVideo\FormatInfo {
+	public function getFormat(): false|FormatInfo {
 		$this->loadMetaData();
 
 		if ( !isset( $this->metadata['format'] ) ) {
@@ -123,7 +123,11 @@ class FFProbe {
 			return [];
 		}
 
-		$json = shell_exec( escapeshellcmd( $wgFFprobeLocation . ' -v quiet -print_format json -show_format -show_streams ' ) . escapeshellarg( $this->getFilePath() ) );
+		$json = shell_exec(
+			escapeshellcmd(
+				$wgFFprobeLocation . ' -v quiet -print_format json -show_format -show_streams '
+			) . escapeshellarg( $this->getFilePath() )
+		);
 
 		$metadata = @json_decode( $json, true );
 
