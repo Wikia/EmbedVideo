@@ -159,7 +159,7 @@ class AudioHandler extends MediaHandler {
 	 *                          Note: These parameters have *not* gone through
 	 *                          $this->normaliseParams()
 	 * @param int $flags A bitfield, may contain self::TRANSFORM_LATER
-	 * @return VideoTransformOutput|AudioTransformOutput
+	 * @return VideoTransformOutput|AudioTransformOutput All media transform outputs as it might be overridden
 	 */
 	public function doTransform( $file, $dstPath, $dstUrl, $params, $flags = 0 ): VideoTransformOutput|AudioTransformOutput {
 		$this->normaliseParams( $file, $params );

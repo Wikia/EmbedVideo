@@ -75,13 +75,8 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 * @return void
 	 */
 	public static function onExtension(): void {
-		 $config = MediaWikiServices::getInstance()->getMainConfig();
-		 $wgEmbedVideoDefaultWidth = $config->get( 'EmbedVideoDefaultWidth' );
-		 $wgMediaHandlers = $config->get( 'MediaHandlers' );
-		 $wgFileExtensions = $config->get( 'FileExtensions' );
-		 $wgEmbedVideoEnableAudioHandler = $config->get( 'EmbedVideoEnableAudioHandler' );
-		 $wgEmbedVideoEnableVideoHandler = $config->get( 'EmbedVideoEnableVideoHandler' );
-		 $wgEmbedVideoAddFileExtensions = $config->get( 'EmbedVideoAddFileExtensions' );
+		global $wgEmbedVideoDefaultWidth, $wgMediaHandlers, $wgFileExtensions,
+			   $wgEmbedVideoEnableAudioHandler, $wgEmbedVideoEnableVideoHandler, $wgEmbedVideoAddFileExtensions;
 
 		if ( !isset( $wgEmbedVideoDefaultWidth ) && ( isset( $_SERVER['HTTP_X_MOBILE'] )
 				&& $_SERVER['HTTP_X_MOBILE'] == 'true' ) && $_COOKIE['stopMobileRedirect'] != 1 ) {
