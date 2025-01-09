@@ -23,7 +23,7 @@ class AudioTransformOutput extends MediaTransformOutput {
 	 * @param array $parameters Parameters for constructing HTML.
 	 * @return void
 	 */
-	public function __construct( $file, private $parameters ) {
+	public function __construct( File $file, private readonly array $parameters ) {
 		$this->file = $file;
 		$this->width = ( $this->parameters['width'] ?? null );
 		$this->height = ( $this->parameters['height'] ?? null );
@@ -60,7 +60,6 @@ class AudioTransformOutput extends MediaTransformOutput {
 		$style = [];
 		$style[] = "max-width: 100%;";
 		if ( empty( $options['no-dimensions'] ) ) {
-			$parameters['width'] = $this->getWidth();
 			$style[] = "width: {$this->getWidth()}px;";
 		}
 

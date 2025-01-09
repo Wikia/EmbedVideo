@@ -16,7 +16,6 @@ class OEmbed {
 	/**
 	 * Main Constructor
 	 *
-	 * @private
 	 * @param array $data Data return from oEmbed service.
 	 * @return void
 	 */

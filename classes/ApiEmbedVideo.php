@@ -29,7 +29,7 @@ class ApiEmbedVideo extends ApiBase {
 			$this->getMain()->getVal( 'valignment' )
 		);
 
-		if ( is_array( $getHTML ) ) {
+		if ( !( str_contains( $getHTML[0], "errorbox" ) ) ) {
 			$HTML = $getHTML[0];
 		} else {
 			$HTML = "Unable to load video from API.";
@@ -40,7 +40,7 @@ class ApiEmbedVideo extends ApiBase {
 	}
 
 	/**
-	 * Setup the allowed and required parameters
+	 * Set up the allowed and required parameters
 	 *
 	 * @return array
 	 */

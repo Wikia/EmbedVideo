@@ -131,10 +131,6 @@ class VideoHandler extends AudioHandler {
 	public function doTransform( $file, $dstPath, $dstUrl, $params, $flags = 0 ): VideoTransformOutput {
 		$this->normaliseParams( $file, $params );
 
-		if ( !( $flags & self::TRANSFORM_LATER ) ) {
-			// @TODO: Thumbnail generation here.
-		}
-
 		return new VideoTransformOutput( $file, $params );
 	}
 

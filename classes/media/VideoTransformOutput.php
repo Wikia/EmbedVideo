@@ -23,7 +23,7 @@ class VideoTransformOutput extends MediaTransformOutput {
 	 * @param array $parameters Parameters for constructing HTML.
 	 * @return void
 	 */
-	public function __construct( $file, private $parameters ) {
+	public function __construct( File $file, private readonly array $parameters ) {
 		$this->file = $file;
 		$this->width = ( $this->parameters['width'] ?? null );
 		$this->height = ( $this->parameters['height'] ?? null );
@@ -56,8 +56,6 @@ class VideoTransformOutput extends MediaTransformOutput {
 		$style[] = "max-width: 100%;";
 		$style[] = "max-height: 100%;";
 		if ( empty( $options['no-dimensions'] ) ) {
-			$parameters['width'] = $this->getWidth();
-			$parameters['height'] = $this->getHeight();
 			$style[] = "width: {$this->getWidth()}px;";
 			$style[] = "height: {$this->getHeight()}px;";
 		}
