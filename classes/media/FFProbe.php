@@ -177,7 +177,7 @@ class StreamInfo {
 	/**
 	 * Main Constructor
 	 *
-	 * @param  array	Stream Info from FFProbe
+	 * @param array $info Stream Info from FFProbe
 	 * @return void
 	 */
 	public function __construct(
@@ -191,65 +191,64 @@ class StreamInfo {
 	/**
 	 * Simple helper instead of repeating an if statement everything.
 	 *
-	 * @private
-	 * @param  string	Field Name
+	 * @param string $field Name
 	 * @return mixed
 	 */
-	private function getField( string $field ) {
+	private function getField( string $field ): mixed {
 		return ( $this->info[$field] ?? false );
 	}
 
 	/**
 	 * Return the codec type.
 	 *
-	 * @return string Codec type or false if unavailable.
+	 * @return string|false Codec type or false if unavailable.
 	 */
-	public function getType() {
+	public function getType(): string|false {
 		return $this->getField( 'codec_type' );
 	}
 
 	/**
 	 * Return the codec name.
 	 *
-	 * @return string Codec name or false if unavailable.
+	 * @return string|false Codec name or false if unavailable.
 	 */
-	public function getCodecName() {
+	public function getCodecName(): string|false {
 		return $this->getField( 'codec_name' );
 	}
 
 	/**
 	 * Return the codec long name.
 	 *
-	 * @return string Codec long name or false if unavailable.
+	 * @return string|false Codec long name or false if unavailable.
 	 */
-	public function getCodecLongName() {
+	public function getCodecLongName(): string|false {
 		return $this->getField( 'codec_long_name' );
 	}
 
 	/**
 	 * Return the width of the stream.
 	 *
-	 * @return int Width or false if unavailable.
+	 * @return int|false Width or false if unavailable.
 	 */
-	public function getWidth() {
+	public function getWidth(): int|false {
 		return $this->getField( 'width' );
 	}
 
 	/**
 	 * Return the height of the stream.
 	 *
-	 * @return int Height or false if unavailable.
+	 * @return int|false Height or false if unavailable.
 	 */
-	public function getHeight() {
+	public function getHeight(): int|false {
 		return $this->getField( 'height' );
 	}
 
 	/**
 	 * Return bit depth for a video or thumbnail.
 	 *
-	 * @return int Bit Depth or false if unavailable.
+	 * @return int|false Bit Depth or false if unavailable.
 	 */
-	public function getBitDepth() {
+	public function getBitDepth(): int|false {
 		return $this->getField( 'bits_per_raw_sample' );
 	}
 
@@ -258,7 +257,7 @@ class StreamInfo {
 	 *
 	 * @return mixed Duration in seconds or false if unavailable.
 	 */
-	public function getDuration() {
+	public function getDuration(): mixed {
 		return $this->getField( 'duration' );
 	}
 
@@ -267,7 +266,7 @@ class StreamInfo {
 	 *
 	 * @return mixed Bite rate in bPS or false if unavailable.
 	 */
-	public function getBitRate() {
+	public function getBitRate(): mixed {
 		return $this->getField( 'bit_rate' );
 	}
 }
@@ -294,7 +293,7 @@ class FormatInfo {
 	 * @param string $field Field Name
 	 * @return mixed
 	 */
-	private function getField( string $field ) {
+	private function getField( string $field ): mixed {
 		return ( $this->info[$field] ?? false );
 	}
 
@@ -303,7 +302,7 @@ class FormatInfo {
 	 *
 	 * @return mixed File path or false if unavailable.
 	 */
-	public function getFilePath() {
+	public function getFilePath(): mixed {
 		return $this->getField( 'filename' );
 	}
 
@@ -312,7 +311,7 @@ class FormatInfo {
 	 *
 	 * @return mixed Duration in seconds or false if unavailable.
 	 */
-	public function getDuration() {
+	public function getDuration(): mixed {
 		return $this->getField( 'duration' );
 	}
 
@@ -321,7 +320,7 @@ class FormatInfo {
 	 *
 	 * @return mixed Bite rate in bPS or false if unavailable.
 	 */
-	public function getBitRate() {
+	public function getBitRate(): mixed {
 		return $this->getField( 'bit_rate' );
 	}
 }

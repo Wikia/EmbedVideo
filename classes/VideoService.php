@@ -658,7 +658,7 @@ class VideoService {
 			}
 
 			$urlArgs = $this->getUrlArgs();
-			$data[] = $urlArgs ? $urlArgs : '';
+			$data[] = $urlArgs ? $urlArgs : null;
 
 			$html = call_user_func_array( 'sprintf', $data );
 		} elseif ( isset( $this->service['oembed'] ) ) {
