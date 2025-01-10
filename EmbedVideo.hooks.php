@@ -198,10 +198,10 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Parse EVL (and vlink) Tags
 	 *
-	 * @param Parser &$parser
+	 * @param Parser $parser
 	 * @return array
 	 */
-	public static function parseEVL( Parser &$parser ): array {
+	public static function parseEVL( Parser $parser ): array {
 		$args = func_get_args();
 		array_shift( $args );
 
@@ -353,7 +353,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 * @param string|null $url
 	 * @return array Error Message
 	 */
-	public static function parseEVU( $parser, ?string $url = null ): array {
+	public static function parseEVU( Parser $parser, ?string $url = null ): array {
 		if ( !$url ) {
 			return self::error( 'missingparams', $url );
 		}
@@ -440,10 +440,10 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Adapter to call the EV parser tag with template like calls.
 	 *
-	 * @param object $parser Parser
+	 * @param Parser $parser Parser
 	 * @return array Error Message
 	 */
-	public static function parseEVT( $parser ): array {
+	public static function parseEVT( Parser $parser ): array {
 		$arguments = func_get_args();
 		array_shift( $arguments );
 
@@ -507,7 +507,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Embeds a video of the chosen service.
 	 *
-	 * @param Parser $parser Parser
+	 * @param Parser|null $parser Parser
 	 * @param string|null $service [Optional] Which online service has the video.
 	 * @param string|null $id [Optional] Identifier Code or URL for the video on the service.
 	 * @param string|null $dimensions [Optional] Dimensions of video
@@ -519,7 +519,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 * @param string|null $vAlignment [Optional] Vertical Alignment of the embed container.
 	 * @return array Encoded representation of input params (to be processed later)
 	 */
-	public static function parseEV( $parser, ?string $service = null, ?string $id = null, ?string $dimensions = null,
+	public static function parseEV( ?Parser $parser, ?string $service = null, ?string $id = null, ?string $dimensions = null,
 								   ?string $alignment = null, ?string $description = null, ?string $container = null,
 								   ?string $urlArgs = null, ?string $autoResize = null, ?string $vAlignment = null ): array {
 		self::resetParameters();
