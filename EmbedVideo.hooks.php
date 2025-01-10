@@ -151,11 +151,11 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Handle passing parseServiceTagSERVICENAME to the parseServiceTag method.
 	 *
-	 * @param  string $name
-	 * @param  array  $args
+	 * @param string $name
+	 * @param array $args
 	 * @return array|null
 	 */
-	public static function __callStatic( $name, $args ): ?array {
+	public static function __callStatic( string $name, array $args ): ?array {
 		if ( str_starts_with( $name, "parseServiceTag" ) ) {
 			$service = str_replace( "parseServiceTag", "", $name );
 			return self::parseServiceTag( $service, $args[0], $args[1], $args[2], $args[3] );
@@ -697,16 +697,15 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Return the valignment parameter.
 	 *
-	 * @return mixed Vertical Alignment or false for not set.
+	 * @return string|false Vertical Alignment or false for not set.
 	 */
-	private static function getVerticalAlignment() {
+	private static function getVerticalAlignment(): string|false {
 		return self::$vAlignment;
 	}
 
 	/**
 	 * Set the align parameter.
 	 *
-	 * @private
 	 * @param string $vAlignment Alignment Parameter
 	 * @return bool Valid
 	 */
@@ -726,17 +725,15 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Return description text.
 	 *
-	 * @private
-	 * @return string|bool String description or false for not set.
+	 * @return string|false String description or false for not set.
 	 */
-	private static function getDescription(): bool|string {
+	private static function getDescription(): string|false {
 		return self::$description;
 	}
 
 	/**
 	 * Set the description.
 	 *
-	 * @private
 	 * @param string $description Description
 	 * @param Parser $parser Mediawiki Parser object
 	 * @return void
@@ -749,6 +746,7 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 * Set the description without using the parser
 	 *
 	 * @param string $description
+	 * @return void
 	 */
 	private static function setDescriptionNoParse( string $description ): void {
 		self::$description = ( !$description ? false : $description );
@@ -757,17 +755,15 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Return container type.
 	 *
-	 * @private
-	 * @return bool|string String container type or false for not set.
+	 * @return string|false String container type or false for not set.
 	 */
-	private static function getContainer(): bool|string {
+	private static function getContainer(): string|false {
 		return self::$container;
 	}
 
 	/**
 	 * Set the container type.
 	 *
-	 * @private
 	 * @param string|null $container
 	 * @return bool Success
 	 */
@@ -783,7 +779,6 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	/**
 	 * Reset parameters between parses.
 	 *
-	 * @private
 	 * @return void
 	 */
 	private static function resetParameters(): void {

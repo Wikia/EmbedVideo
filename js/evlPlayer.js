@@ -6,7 +6,7 @@
 		 */
 		window?.autoResizer?.();
 		window.addEventListener('FandomDesktopContentSize', () => window?.autoResizer?.());
-		$('a.embedvideo-evl').click(function(e){
+		$('a.embedvideo-evl').on('click', function(e){
 			e.preventDefault();
 
 			var data = $(this).data('video-json');

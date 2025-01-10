@@ -580,7 +580,7 @@ class VideoService {
 	 * @param string $service Name
 	 * @return void
 	 */
-	private function __construct( $service ) {
+	private function __construct( string $service ) {
 		$this->service = self::$services[$service];
 	}
 
@@ -658,9 +658,7 @@ class VideoService {
 			}
 
 			$urlArgs = $this->getUrlArgs();
-			if ( $urlArgs !== false ) {
-				$data[] = $urlArgs;
-			}
+			$data[] = $urlArgs ? $urlArgs : '';
 
 			$html = call_user_func_array( 'sprintf', $data );
 		} elseif ( isset( $this->service['oembed'] ) ) {
@@ -846,12 +844,10 @@ class VideoService {
 	/**
 	 * Return the optional URL arguments.
 	 *
-	 * @return string Integer value or false for not set.
+	 * @return string|false Integer value or false for not set.
 	 */
-	public function getUrlArgs() {
-		if ( $this->urlArgs !== false ) {
-			return http_build_query( $this->urlArgs );
-		}
+	public function getUrlArgs(): string|false {
+		return $this->urlArgs ? http_build_query( $this->urlArgs ) : false;
 	}
 
 	/**
