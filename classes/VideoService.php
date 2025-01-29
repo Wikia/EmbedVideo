@@ -6,9 +6,11 @@
  * @license MIT
  * @package EmbedVideo
  * @link    https://www.mediawiki.org/wiki/Extension:EmbedVideo
- **/
+ */
 
 namespace EmbedVideo;
+
+use RuntimeException;
 
 class VideoService {
 	/**
@@ -16,9 +18,9 @@ class VideoService {
 	 *
 	 * @var array
 	 */
-	static private $services = [
+	private static $services = [
 		'archiveorg' => [
-			'embed'			=> '<iframe title="%4$s" src="//archive.org/embed/%1$s" width="%2$d" height="%3$d" frameborder="0"  allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//archive.org/embed/%1$s" width="%2$d" height="%3$d" style="border: none;"  allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio' => 1.2994923857868, // (640 / 493)
 			'https_enabled'	=> true,
@@ -30,7 +32,7 @@ class VideoService {
 			]
 		],
 		'bambuser' => [
-			'embed'			=> '<iframe title="%4$s" src="//embed.bambuser.com/broadcast/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//embed.bambuser.com/broadcast/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio' => 1.2994923857868, // (640 / 493)
 			'https_enabled'	=> true,
@@ -42,7 +44,7 @@ class VideoService {
 			]
 		],
 		'bambuser_channel' => [
-			'embed' 		=> '<iframe title="%4$s" src="//embed.bambuser.com/channel/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed' 		=> '<iframe title="%4$s" src="//embed.bambuser.com/channel/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio' => 1.2994923857868, // (640 / 493)
 			'https_enabled'	=> true,
@@ -54,7 +56,7 @@ class VideoService {
 			]
 		],
 		'beam' => [
-			'embed'			=> '<iframe title="%4$s" src="https://mixer.com/embed/player/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://mixer.com/embed/player/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -66,7 +68,7 @@ class VideoService {
 			]
 		],
 		'disclose' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.disclose.tv/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//www.disclose.tv/embed/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (640 / 360)
 			'https_enabled'	=> true,
@@ -88,7 +90,7 @@ class VideoService {
 			'oembed'		=> 'http://blip.tv/oembed/?url=%1$s&width=%2$d&maxwidth=%2$d'
 		],
 		'bing' => [
-			'embed'			=> '<iframe title="%4$s" src="//hub.video.msn.com/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" scrolling="no" noscroll allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//hub.video.msn.com/embed/%1$s" width="%2$d" height="%3$d" style="border: none; overflow: hidden;" noscroll allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -100,7 +102,7 @@ class VideoService {
 			]
 		],
 		'collegehumor' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.collegehumor.com/e/%1$s" width="%2$d" height="%3$d" frameborder="0" allowFullScreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//www.collegehumor.com/e/%1$s" width="%2$d" height="%3$d" style="border: none;" allowFullScreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio' => 1.6260162601626, // (600 / 369)
 			'https_enabled'	=> true,
@@ -112,7 +114,7 @@ class VideoService {
 			]
 		],
 		'dailymotion' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.dailymotion.com/embed/video/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//www.dailymotion.com/embed/video/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -124,13 +126,13 @@ class VideoService {
 			]
 		],
 		'divshare' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.divshare.com/flash/video2?myId=%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//www.divshare.com/flash/video2?myId=%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true
 		],
 		'facebook' => [
-			'embed'			=> '<iframe title="%4$s" src="https://www.facebook.com/plugins/video.php?href=%1$s&show_text=0" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://www.facebook.com/plugins/video.php?href=%1$s&show_text=0" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -139,7 +141,7 @@ class VideoService {
 			]
 		],
 		'funnyordie' => [
-			'embed'			=> '<iframe title="%4$s" src="http://www.funnyordie.com/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="http://www.funnyordie.com/embed/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.64102564102564, // (640 / 390)
 			'https_enabled'	=> false,
@@ -151,7 +153,7 @@ class VideoService {
 			]
 		],
 		'gfycat' => [
-			'embed'			=> '<iframe title="%4$s" src="//gfycat.com/ifr/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy" scrolling="no" style="-webkit-backface-visibility: hidden;-webkit-transform: scale(1);"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//gfycat.com/ifr/%1$s" width="%2$d" height="%3$d" style="border: none; overflow: hidden" allowfullscreen="true" loading="lazy" style="-webkit-backface-visibility: hidden;-webkit-transform: scale(1);"></iframe>',
 			'default_width'	=> 640,
 			'https_enabled'	=> true,
 			'url_regex'		=> [
@@ -162,7 +164,7 @@ class VideoService {
 			]
 		],
 		'jwplayer' => [
-			'embed'			=> '<iframe title="%4$s" src="//content.jwplatform.com/players/%1$s.html" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//content.jwplatform.com/players/%1$s.html" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -174,7 +176,7 @@ class VideoService {
 			]
 		],
 		'kickstarter' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.kickstarter.com/projects/%1$s/widget/video.html" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//www.kickstarter.com/projects/%1$s/widget/video.html" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -186,7 +188,7 @@ class VideoService {
 			]
 		],
 		'mediacccde' => [
-			'embed'	 => '<iframe title="%4$s" src="https://media.ccc.de/v/%1$s/oembed" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy" scrolling="no"></iframe>',
+			'embed'	 => '<iframe title="%4$s" src="https://media.ccc.de/v/%1$s/oembed" width="%2$d" height="%3$d" style="border: none; overflow: hidden;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width' => 660,
 			'default_ratio' => 1.77777777777778, // (16 / 9),
 			'https_enabled' => true,
@@ -198,7 +200,7 @@ class VideoService {
 			]
 		],
 		'metacafe' => [
-			'embed'			=> '<iframe title="%4$s" src="http://www.metacafe.com/embed/%1$s/" width="%2$d" height="%3$d" frameborder="0" allowFullScreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="http://www.metacafe.com/embed/%1$s/" width="%2$d" height="%3$d" style="border: none;" allowFullScreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> false,
@@ -222,7 +224,7 @@ class VideoService {
 			]
 		],
 		'mixer' => [
-			'embed'			=> '<iframe title="%4$s" src="https://mixer.com/embed/player/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://mixer.com/embed/player/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -234,7 +236,7 @@ class VideoService {
 			]
 		],
 		'nico' => [
-			'embed'			=> '<iframe title="%4$s" allowfullscreen="allowfullscreen" frameborder="0" width="%2$d" height="%3$d" src="https://embed.nicovideo.jp/watch/%1$s?oldScript=1&amp;allowProgrammaticFullScreen=1" style="max-width: 100%%;" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" allowfullscreen="allowfullscreen" style="border: none;" width="%2$d" height="%3$d" src="https://embed.nicovideo.jp/watch/%1$s?oldScript=1&amp;allowProgrammaticFullScreen=1" style="max-width: 100%%;" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.59609120521173, // (490 / 307)
 			'https_enabled'	=> false,
@@ -246,7 +248,7 @@ class VideoService {
 			]
 		],
 		'rutube' => [
-			'embed'			=> '<iframe title="%4$s" src="//rutube.ru/play/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//rutube.ru/play/embed/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -258,7 +260,7 @@ class VideoService {
 			]
 		],
 		'smashcast' => [
-			'embed'			=> '<iframe title="%4$s" src="https://www.smashcast.tv/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://www.smashcast.tv/embed/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -270,7 +272,7 @@ class VideoService {
 			]
 		],
 		'soundcloud' => [
-			'embed'			=> '<iframe title="%4$s" src="https://w.soundcloud.com/player/?url=%1$s&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true" width="%2$d" height="%3$d" scrolling="no" frameborder="no" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://w.soundcloud.com/player/?url=%1$s&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true" width="%2$d" height="%3$d" style="border: none; overflow: hidden;" loading="lazy"></iframe>',
 			'default_width'	=> 186,
 			'default_ratio'	=> 2.66666,
 			'https_enabled'	=> true,
@@ -279,7 +281,7 @@ class VideoService {
 			]
 		],
 		'spotifyalbum' => [
-			'embed'			=> '<iframe title="%4$s" src="https://open.spotify.com/embed/album/%1$s" width="%2$d" height="%3$d" frameborder="0" allowtransparency="true" allow="encrypted-media" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://open.spotify.com/embed/album/%1$s" width="%2$d" height="%3$d" style="border: none;" allowtransparency="true" allow="encrypted-media" loading="lazy"></iframe>',
 			'default_width'	=> 300,
 			'default_ratio'	=> 0.7895,
 			'https_enabled'	=> true,
@@ -291,7 +293,7 @@ class VideoService {
 			]
 		],
 		'spotifyartist' => [
-			'embed'			=> '<iframe title="%4$s" src="https://open.spotify.com/embed/artist/%1$s" width="%2$d" height="%3$d" frameborder="0" allowtransparency="true" allow="encrypted-media" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://open.spotify.com/embed/artist/%1$s" width="%2$d" height="%3$d" style="border: none;" allowtransparency="true" allow="encrypted-media" loading="lazy"></iframe>',
 			'default_width'	=> 300,
 			'default_ratio'	=> 0.7895,
 			'https_enabled'	=> true,
@@ -303,7 +305,7 @@ class VideoService {
 			]
 		],
 		'spotifytrack' => [
-			'embed'			=> '<iframe title="%4$s" src="https://open.spotify.com/embed/track/%1$s" width="%2$d" height="%3$d" frameborder="0" allowtransparency="true" allow="encrypted-media" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://open.spotify.com/embed/track/%1$s" width="%2$d" height="%3$d" style="border: none;" allowtransparency="true" allow="encrypted-media" loading="lazy"></iframe>',
 			'default_width'	=> 300,
 			'default_ratio'	=> 0.7895,
 			'https_enabled'	=> true,
@@ -315,7 +317,7 @@ class VideoService {
 			]
 		],
 		'teachertube' => [
-			'embed'			=> '<iframe title="%4$s" src="http://www.teachertube.com/embed/video/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="http://www.teachertube.com/embed/video/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.72972972972973, // (640 / 370)
 			'https_enabled'	=> false,
@@ -327,7 +329,7 @@ class VideoService {
 			]
 		],
 		'ted' => [
-			'embed'			=> '<iframe title="%4$s" src="//embed-ssl.ted.com/talks/%1$s.html" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//embed-ssl.ted.com/talks/%1$s.html" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -339,7 +341,7 @@ class VideoService {
 			]
 		],
 		'tubitv' => [
-			'embed'			=> '<iframe title="%4$s" src="//tubitv.com/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//tubitv.com/embed/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (640 / 360)
 			'https_enabled'	=> true,
@@ -351,7 +353,7 @@ class VideoService {
 			]
 		],
 		'tudou' => [
-			'embed'			=> '<iframe title="%4$s" src="http://www.tudou.com/programs/view/html5embed.action?code=%1$s&autoPlay=false&playType=AUTO" allowfullscreen="true" width="%2$d" height="%3$d" frameborder="0" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="http://www.tudou.com/programs/view/html5embed.action?code=%1$s&autoPlay=false&playType=AUTO" allowfullscreen="true" width="%2$d" height="%3$d" style="border: none;" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.6,
 			'https_enabled'	=> false,
@@ -364,7 +366,7 @@ class VideoService {
 			]
 		],
 		'tvpot' => [
-			'embed'			=> '<iframe title="%4$s" src="//videofarm.daum.net/controller/video/viewer/Video.html?vid=%1$s&play_loc=undefined&alert=true" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//videofarm.daum.net/controller/video/viewer/Video.html?vid=%1$s&play_loc=undefined&alert=true" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -381,7 +383,7 @@ class VideoService {
 			'https_enabled'	=> false
 		],
 		'vimeo' => [
-			'embed'			=> '<iframe title="%4$s" src="//player.vimeo.com/video/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//player.vimeo.com/video/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio' => 1.77777777777778, // (640 / 360)
 			'https_enabled'	=> true,
@@ -395,7 +397,7 @@ class VideoService {
 			'oembed'		=> '%4$s//vimeo.com/api/oembed.json?url=%1$s&width=%2$d&maxwidth=%2$d'
 		],
 		'vine' => [
-			'embed'			=> '<iframe title="%4$s" src="//vine.co/v/%1$s/embed/simple" width="%2$d" height="%3$d" frameborder="0" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//vine.co/v/%1$s/embed/simple" width="%2$d" height="%3$d" style="border: none;" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio' => 1, // (1 / 1)
 			'https_enabled'	=> true,
@@ -407,7 +409,7 @@ class VideoService {
 			]
 		],
 		'yahoo' => [
-			'embed'			=> '<iframe title="%4$s" src="//screen.yahoo.com/%1$s.html?format=embed" width="%2$d" height="%3$d" scrolling="no" frameborder="0" allowfullscreen="true" allowtransparency="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//screen.yahoo.com/%1$s.html?format=embed" width="%2$d" height="%3$d" style="border: none; overflow: hidden;" allowfullscreen="true" allowtransparency="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -419,7 +421,7 @@ class VideoService {
 			]
 		],
 		'youtube' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.youtube.com/embed/%1$s?%5$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//www.youtube.com/embed/%1$s?%5$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -438,7 +440,7 @@ class VideoService {
 			]
 		],
 		'youtubeplaylist' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.youtube.com/embed/videoseries?list=%1$s&%5$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//www.youtube.com/embed/videoseries?list=%1$s&%5$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -450,7 +452,7 @@ class VideoService {
 			]
 		],
 		'youtubevideolist' => [
-			'embed'			=> '<iframe title="%4$s" src="//www.youtube.com/embed/%1$s?%5$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="//www.youtube.com/embed/%1$s?%5$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.77777777777778, // (16 / 9)
 			'https_enabled'	=> true,
@@ -462,7 +464,7 @@ class VideoService {
 			]
 		],
 		'youku' => [
-			'embed'			=> '<iframe title="%4$s" src="https://player.youku.com/embed/%1$s" width="%2$d" height="%3$d" frameborder="0" allowfullscreen="true" loading="lazy"></iframe>',
+			'embed'			=> '<iframe title="%4$s" src="https://player.youku.com/embed/%1$s" width="%2$d" height="%3$d" style="border: none;" allowfullscreen="true" loading="lazy"></iframe>',
 			'default_width'	=> 640,
 			'default_ratio'	=> 1.6,
 			'https_enabled'	=> false,
@@ -480,9 +482,9 @@ class VideoService {
 	 *
 	 * @var array
 	 */
-	static private $serviceHostMap = [
+	private static $serviceHostMap = [
 		'archive.org'				=> 'archiveorg',
-		'embed.bambuser.com'		=> ['bambuser', 'bambuser_channel'],
+		'embed.bambuser.com'		=> [ 'bambuser', 'bambuser_channel' ],
 		'beam.pro' 					=> 'beam',
 		'blip.tv'					=> 'blip',
 		'bing.com'					=> 'bing',
@@ -502,7 +504,7 @@ class VideoService {
 		'rutube.ru'					=> 'rutube',
 		'smashcast.tv'				=> 'smashcast',
 		'soundcloud.com'			=> 'soundcloud',
-		'spotify.com'				=> ['spotifyalbum', 'spotifyartist', 'spotifytrack'],
+		'spotify.com'				=> [ 'spotifyalbum', 'spotifyartist', 'spotifytrack' ],
 		'teachertube.com'			=> 'teachertube',
 		'ted.com'					=> 'ted',
 		'tubitv.com'				=> 'tubitv',
@@ -512,7 +514,7 @@ class VideoService {
 		'vimeo.com'					=> 'vimeo',
 		'vine.co'					=> 'vine',
 		'screen.yahoo.com'			=> 'yahoo',
-		'youtube.com'				=> ['youtube', 'youtubeplaylist', 'youtubevideolist'],
+		'youtube.com'				=> [ 'youtube', 'youtubeplaylist', 'youtubevideolist' ],
 		'youku.com'					=> 'youku'
 	];
 
@@ -526,21 +528,21 @@ class VideoService {
 	/**
 	 * Video ID
 	 *
-	 * @var array
+	 * @var int
 	 */
 	private $id = false;
 
 	/**
 	 * Player Width
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $width = false;
 
 	/**
 	 * Player Height
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $height = false;
 
@@ -575,24 +577,22 @@ class VideoService {
 	/**
 	 * Main Constructor
 	 *
-	 * @access private
-	 * @param  string	Service Name
+	 * @param string $service Name
 	 * @return void
 	 */
-	private function __construct($service) {
+	private function __construct( string $service ) {
 		$this->service = self::$services[$service];
 	}
 
 	/**
 	 * Create a new object from a service name.
 	 *
-	 * @access public
-	 * @param  string	Service Name
-	 * @return mixed	New VideoService object or false on initialization error.
+	 * @param string $service Name
+	 * @return VideoService|false New VideoService object or false on initialization error.
 	 */
-	public static function newFromName($service) {
-		if (isset(self::$services[$service])) {
-			return new self($service);
+	public static function newFromName( string $service ): self|false {
+		if ( isset( self::$services[$service] ) ) {
+			return new self( $service );
 		} else {
 			return false;
 		}
@@ -603,7 +603,7 @@ class VideoService {
 	 *
 	 * @return array $serviceHostMap
 	 */
-	public static function getServiceHostMap() {
+	public static function getServiceHostMap(): array {
 		return self::$serviceHostMap;
 	}
 
@@ -612,20 +612,20 @@ class VideoService {
 	 *
 	 * @return array $services
 	 */
-	public static function getAvailableServices() {
-		return array_keys(self::$services);
+	public static function getAvailableServices(): array {
+		return array_keys( self::$services );
 	}
 
 	/**
 	 * Add a service
 	 *
-	 * @access public
-	 * @param  string	Service Name
-	 * @param  mixed   args
+	 * @param string $service Name
+	 * @param mixed $args
+	 * @throws RuntimeException
 	 */
-	public static function addService($service, $args) {
-		if (isset(self::$services[$service])) {
-			throw new \MWException("Service already already exists: $service");
+	public static function addService( string $service, mixed $args ): void {
+		if ( isset( self::$services[$service] ) ) {
+			throw new RuntimeException( "Service already already exists: $service" );
 		}
 		self::$services[$service] = $args;
 	}
@@ -633,41 +633,38 @@ class VideoService {
 	/**
 	 * Return built HTML.
 	 *
-	 * @access public
-	 * @return mixed	String HTML to output or false on error.
+	 * @return mixed String HTML to output or false on error.
 	 */
-	public function getHtml() {
-		if ($this->getVideoID() === false || $this->getWidth() === false || $this->getHeight() === false) {
+	public function getHtml(): mixed {
+		if ( $this->getVideoID() === false || $this->getWidth() === false || $this->getHeight() === false ) {
 			return false;
 		}
 
 		$html = false;
-		if (isset($this->service['embed'])) {
+		if ( isset( $this->service['embed'] ) ) {
 			// Embed can be generated locally instead of calling out to the service to get it.
 			$data = [
 				$this->service['embed'],
-				htmlentities($this->getVideoID(), ENT_QUOTES),
+				htmlentities( $this->getVideoID(), ENT_QUOTES ),
 				$this->getWidth(),
 				$this->getHeight(),
 				$this->getIframeTitle(),
 			];
 
-			if ($this->getExtraIds() !== false) {
-				foreach ($this->getExtraIds() as $extraId) {
-					$data[] = htmlentities($extraId, ENT_QUOTES);
+			if ( $this->getExtraIds() !== false ) {
+				foreach ( $this->getExtraIds() as $extraId ) {
+					$data[] = htmlentities( $extraId, ENT_QUOTES );
 				}
 			}
 
 			$urlArgs = $this->getUrlArgs();
-			if ($urlArgs !== false) {
-				$data[] = $urlArgs;
-			}
+			$data[] = $urlArgs ? $urlArgs : null;
 
-			$html = call_user_func_array('sprintf', $data);
-		} elseif (isset($this->service['oembed'])) {
+			$html = call_user_func_array( 'sprintf', $data );
+		} elseif ( isset( $this->service['oembed'] ) ) {
 			// Call out to the service to get the embed HTML.
-			if ($this->service['https_enabled']
-				&& stristr($this->getVideoID(), 'https:') !== false
+			if ( $this->service['https_enabled']
+				&& stristr( $this->getVideoID(), 'https:' ) !== false
 			) {
 				$protocol = 'https:';
 			} else {
@@ -680,8 +677,8 @@ class VideoService {
 				$this->getHeight(),
 				$protocol
 			);
-			$oEmbed = OEmbed::newFromRequest($url);
-			if ($oEmbed !== false) {
+			$oEmbed = OEmbed::newFromRequest( $url );
+			if ( $oEmbed !== false ) {
 				$html = $oEmbed->getHtml();
 			}
 		}
@@ -692,23 +689,21 @@ class VideoService {
 	/**
 	 * Return Video ID
 	 *
-	 * @access public
-	 * @return mixed	Parsed Video ID or false for one that is not set.
+	 * @return string|false Parsed Video ID or false for one that is not set.
 	 */
-	public function getVideoID() {
+	public function getVideoID(): string|false {
 		return $this->id;
 	}
 
 	/**
 	 * Set the Video ID for this video.
 	 *
-	 * @access public
-	 * @param  string	Video ID/URL
-	 * @return boolean	Success
+	 * @param string $id Video ID/URL
+	 * @return bool Success
 	 */
-	public function setVideoID($id) {
-		$id = $this->parseVideoID($id);
-		if ($id !== false) {
+	public function setVideoID( string $id ): bool {
+		$id = $this->parseVideoID( $id );
+		if ( $id !== false ) {
 			$this->id = $id;
 			return true;
 		} else {
@@ -719,26 +714,26 @@ class VideoService {
 	/**
 	 * Parse the video ID/URL provided.
 	 *
-	 * @access public
-	 * @param  string	Video ID/URL
-	 * @return mixed	Parsed Video ID or false on failure.
+	 * @param string $id Video ID/URL
+	 * @return string|false Parsed Video ID or false on failure.
 	 */
-	public function parseVideoID($id) {
-		$id = trim($id);
-		if (!array_key_exists('id_regex', $this->service)) {
+	public function parseVideoID( string $id ): string|false {
+		$id = trim( $id );
+		if ( !array_key_exists( 'id_regex', $this->service ) ) {
 			$this->service['id_regex'] = [];
 		}
-		// URL regexes are put into the array first to prevent cases where the ID regexes might accidentally match an incorrect portion of the URL.
-		$regexes = array_merge((array)$this->service['url_regex'], (array)$this->service['id_regex']);
-		if (is_array($regexes) && count($regexes)) {
-			foreach ($regexes as $regex) {
-				if (preg_match($regex, $id, $matches)) {
+		// URL regexes are put into the array first to prevent cases where the ID regexes
+		// might accidentally match an incorrect portion of the URL.
+		$regexes = array_merge( (array)$this->service['url_regex'], (array)$this->service['id_regex'] );
+		if ( count( $regexes ) ) {
+			foreach ( $regexes as $regex ) {
+				if ( preg_match( $regex, $id, $matches ) ) {
 					// Get rid of the full text match.
-					array_shift($matches);
+					array_shift( $matches );
 
-					$id = array_shift($matches);
+					$id = array_shift( $matches );
 
-					if (count($matches)) {
+					if ( count( $matches ) ) {
 						$this->extraIDs = $matches;
 					}
 
@@ -756,32 +751,29 @@ class VideoService {
 	/**
 	 * Return extra IDs.
 	 *
-	 * @access public
-	 * @return array|boolean	Array of extra information or false if not set.
+	 * @return array|false Array of extra information or false if not set.
 	 */
-	public function getExtraIDs() {
+	public function getExtraIDs(): array|false {
 		return $this->extraIDs;
 	}
 
 	/**
 	 * Return the width.
 	 *
-	 * @access public
-	 * @return mixed	Integer value or false for not set.
+	 * @return int|false Integer value or false for not set.
 	 */
-	public function getWidth() {
+	public function getWidth(): int|false {
 		return $this->width;
 	}
 
 	/**
 	 * Return the iframeTitle.
 	 *
-	 * @access public
-	 * @return String, defaulting to message 'ev_default_play_desc'
+	 * @return string defaulting to message 'ev_default_play_desc'
 	 */
-	public function getIframeTitle() {
-		if ($this->iframeTitle == "") {
-			return wfMessage('ev_default_play_desc')->text();
+	public function getIframeTitle(): string {
+		if ( $this->iframeTitle == "" ) {
+			return wfMessage( 'ev_default_play_desc' )->text();
 		}
 
 		return $this->iframeTitle;
@@ -791,33 +783,32 @@ class VideoService {
 	 * Set the width of the player.  This also will set the height automatically.
 	 * Width will be automatically constrained to the minimum and maximum widths.
 	 *
-	 * @access public
-	 * @param  integer	Width
+	 * @param int|null $width
 	 * @return void
 	 */
-	public function setWidth($width = null) {
+	public function setWidth( ?int $width = null ): void {
 		global $wgEmbedVideoMinWidth, $wgEmbedVideoMaxWidth, $wgEmbedVideoDefaultWidth;
 
-		if (!is_numeric($width)) {
-			if ($width === null && $this->getDefaultWidth() !== false && $wgEmbedVideoDefaultWidth < 1) {
+		if ( !is_numeric( $width ) ) {
+			if ( $width === null && $this->getDefaultWidth() !== false && $wgEmbedVideoDefaultWidth < 1 ) {
 				$width = $this->getDefaultWidth();
 			} else {
-				$width = ($wgEmbedVideoDefaultWidth > 0 ? $wgEmbedVideoDefaultWidth : 640);
+				$width = ( $wgEmbedVideoDefaultWidth > 0 ? $wgEmbedVideoDefaultWidth : 640 );
 			}
 		} else {
-			$width = intval($width);
+			$width = intval( $width );
 		}
 
-		if ($wgEmbedVideoMaxWidth > 0 && $width > $wgEmbedVideoMaxWidth) {
+		if ( $wgEmbedVideoMaxWidth > 0 && $width > $wgEmbedVideoMaxWidth ) {
 			$width = $wgEmbedVideoMaxWidth;
 		}
 
-		if ($wgEmbedVideoMinWidth > 0 && $width < $wgEmbedVideoMinWidth) {
+		if ( $wgEmbedVideoMinWidth > 0 && $width < $wgEmbedVideoMinWidth ) {
 			$width = $wgEmbedVideoMinWidth;
 		}
 		$this->width = $width;
 
-		if ($this->getHeight() === false) {
+		if ( $this->getHeight() === false ) {
 			$this->setHeight();
 		}
 	}
@@ -825,70 +816,64 @@ class VideoService {
 	/**
 	 * Return the height.
 	 *
-	 * @access public
-	 * @return mixed	Integer value or false for not set.
+	 * @return int|bool Integer value or false for not set.
 	 */
-	public function getHeight() {
+	public function getHeight(): int|false {
 		return $this->height;
 	}
 
 	/**
 	 * Set the height automatically by a ratio of the width or use the provided value.
 	 *
-	 * @access public
-	 * @param  mixed	[Optional] Height Value
+	 * @param int|null $height [Optional]
 	 * @return void
 	 */
-	public function setHeight($height = null) {
-		if ($height !== null && $height > 0) {
-			$this->height = intval($height);
+	public function setHeight( ?int $height = null ): void {
+		if ( $height !== null && $height > 0 ) {
+			$this->height = intval( $height );
 			return;
 		}
 
 		$ratio = 16 / 9;
-		if ($this->getDefaultRatio() !== false) {
+		if ( $this->getDefaultRatio() !== false ) {
 			$ratio = $this->getDefaultRatio();
 		}
-		$this->height = round($this->getWidth() / $ratio);
+		$this->height = round( $this->getWidth() / $ratio );
 	}
 
 	/**
 	 * Return the optional URL arguments.
 	 *
-	 * @access public
-	 * @return mixed	Integer value or false for not set.
+	 * @return string|false Integer value or false for not set.
 	 */
-	public function getUrlArgs() {
-		if ($this->urlArgs !== false) {
-			return http_build_query($this->urlArgs);
-		}
+	public function getUrlArgs(): string|false {
+		return $this->urlArgs ? http_build_query( $this->urlArgs ) : false;
 	}
 
 	/**
 	 * Set URL Arguments to optionally add to the embed URL.
 	 *
-	 * @access public
-	 * @param  string	Raw Arguments
-	 * @return boolean	Success
+	 * @param string $urlArgs Raw Arguments
+	 * @return bool Success
 	 */
-	public function setUrlArgs($urlArgs) {
-		if (!$urlArgs) {
+	public function setUrlArgs( string $urlArgs ): bool {
+		if ( !$urlArgs ) {
 			return true;
 		}
 
-		$urlArgs = urldecode($urlArgs);
-		$_args = explode('&', $urlArgs);
+		$urlArgs = urldecode( $urlArgs );
+		$_args = explode( '&', $urlArgs );
 		$arguments = [];
 
-		if (is_array($_args)) {
-			foreach ($_args as $rawPair) {
-				$parts = explode("=", $rawPair, 2);
+		if ( is_array( $_args ) ) {
+			foreach ( $_args as $rawPair ) {
+				$parts = explode( "=", $rawPair, 2 );
 				$key = $parts[0];
 				$value = $parts[1] ?? null;
-				if (empty($key) || ($value === null || $value === '')) {
+				if ( empty( $key ) || ( $value === null || $value === '' ) ) {
 					return false;
 				}
-				$arguments[$key] = htmlentities($value, ENT_QUOTES);
+				$arguments[$key] = htmlentities( $value, ENT_QUOTES );
 			}
 		} else {
 			return false;
@@ -900,30 +885,27 @@ class VideoService {
 	/**
 	 * Is HTTPS enabled?
 	 *
-	 * @access public
-	 * @return boolean
+	 * @return bool
 	 */
-	public function isHttpsEnabled() {
+	public function isHttpsEnabled(): bool {
 		return (bool)$this->service['https_enabled'];
 	}
 
 	/**
 	 * Return default width if set.
 	 *
-	 * @access public
-	 * @return mixed	Integer width or false if not set.
+	 * @return mixed Integer width or false if not set.
 	 */
-	public function getDefaultWidth() {
-		return ($this->service['default_width'] > 0 ? $this->service['default_width'] : false);
+	public function getDefaultWidth(): mixed {
+		return ( $this->service['default_width'] > 0 ? $this->service['default_width'] : false );
 	}
 
 	/**
 	 * Return default ratio if set.
 	 *
-	 * @access public
-	 * @return mixed	Integer ratio or false if not set.
+	 * @return mixed Integer ratio or false if not set.
 	 */
-	public function getDefaultRatio() {
+	public function getDefaultRatio(): mixed {
 		$defaultRatio = $this->service['default_ratio'] ?? 0;
 		return $defaultRatio > 0 ? $defaultRatio : false;
 	}

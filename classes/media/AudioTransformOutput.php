@@ -7,40 +7,36 @@
  * @license MIT
  * @package EmbedVideo
  * @link    https://www.mediawiki.org/wiki/Extension:EmbedVideo
- **/
+ */
 
 namespace EmbedVideo;
 
-use Html;
+use File;
+use MediaTransformOutput;
+use MediaWiki\Html\Html;
 
-class AudioTransformOutput extends \MediaTransformOutput {
-	/** @var array */
-	private $parameters;
-
+class AudioTransformOutput extends MediaTransformOutput {
 	/**
 	 * Main Constructor
 	 *
-	 * @access public
-	 * @param  \File $file
-	 * @param  array $parameters	Parameters for constructing HTML.
+	 * @param File $file
+	 * @param array $parameters Parameters for constructing HTML.
 	 * @return void
 	 */
-	public function __construct($file, $parameters) {
+	public function __construct( File $file, private readonly array $parameters ) {
 		$this->file = $file;
-		$this->parameters = $parameters;
-		$this->width = (isset($parameters['width']) ? $parameters['width'] : null);
-		$this->height = (isset($parameters['height']) ? $parameters['height'] : null);
+		$this->width = ( $this->parameters['width'] ?? null );
+		$this->height = ( $this->parameters['height'] ?? null );
 		$this->path = null;
 		$this->lang = false;
-		$this->page = $parameters['page'];
+		$this->page = $this->parameters['page'];
 		$this->url = $file->getFullUrl();
 	}
 
 	/**
 	 * Fetch HTML for this transform output
 	 *
-	 * @access public
-	 * @param  array $options Associative array of options. Boolean options
+	 * @param array $options Associative array of options. Boolean options
 	 *                        should be indicated with a value of true for
 	 *                        true, and false or absent for false. alt
 	 *                        Alternate text or caption desc-link
@@ -56,40 +52,39 @@ class AudioTransformOutput extends \MediaTransformOutput {
 	 *                        For sounds and videos, they may be displayed
 	 *                        in other ways.
 	 *
-	 * @return string	HTML
+	 * @return string HTML
 	 */
-	public function toHtml($options = []) {
+	public function toHtml( $options = [] ): string {
 		$parameters = $this->parameters;
 
 		$style = [];
 		$style[] = "max-width: 100%;";
-		if (empty($options['no-dimensions'])) {
-			$parameters['width'] = $this->getWidth();
+		if ( empty( $options['no-dimensions'] ) ) {
 			$style[] = "width: {$this->getWidth()}px;";
 		}
 
-		if (!empty($options['valign'])) {
+		if ( !empty( $options['valign'] ) ) {
 			$style[] = "vertical-align: {$options['valign']};";
 		}
 
-		if (!empty($options['img-class'])) {
+		if ( !empty( $options['img-class'] ) ) {
 			$class = $options['img-class'];
 		}
 
-		if (!isset($parameters['start'])) {
+		if ( !isset( $parameters['start'] ) ) {
 			$parameters['start'] = null;
 		}
-		if (!isset($parameters['end'])) {
+		if ( !isset( $parameters['end'] ) ) {
 			$parameters['end'] = null;
 		}
 
 		$inOut = false;
-		if ($parameters['start'] !== $parameters['end']) {
-			if (isset($parameters['start']) && $parameters['start'] !== false) {
-				$inOut[] = $parameters['start'];
+		if ( $parameters['start'] !== $parameters['end'] ) {
+			if ( isset( $parameters['start'] ) && $parameters['start'] !== false ) {
+				$inOut = [ $parameters['start'] ];
 			}
 
-			if (isset($parameters['end']) && $parameters['end'] !== false) {
+			if ( isset( $parameters['end'] ) && $parameters['end'] !== false ) {
 				$inOut[] = $parameters['end'];
 			}
 		}
@@ -105,7 +100,7 @@ class AudioTransformOutput extends \MediaTransformOutput {
 		}
 
 		return Html::rawElement( 'audio', [
-			'src' => $this->url . ($inOut !== false ? '#t=' . implode(',', $inOut) : ''),
+			'src' => $this->url . ( $inOut !== false ? '#t=' . implode( ',', $inOut ) : '' ),
 			'width' => $this->getWidth(),
 			'class' => $class ?? false,
 			'style' => $style ? implode( ' ', $style ) : false,
