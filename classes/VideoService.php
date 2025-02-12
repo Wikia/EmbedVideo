@@ -786,7 +786,7 @@ class VideoService {
 	 * @param int|null $width
 	 * @return void
 	 */
-	public function setWidth( ?int $width = null ): void {
+	public function setWidth( mixed $width = null ): void {
 		global $wgEmbedVideoMinWidth, $wgEmbedVideoMaxWidth, $wgEmbedVideoDefaultWidth;
 
 		if ( !is_numeric( $width ) ) {
@@ -828,7 +828,7 @@ class VideoService {
 	 * @param int|null $height [Optional]
 	 * @return void
 	 */
-	public function setHeight( ?int $height = null ): void {
+	public function setHeight( mixed $height = null ): void {
 		if ( $height !== null && $height > 0 ) {
 			$this->height = intval( $height );
 			return;
