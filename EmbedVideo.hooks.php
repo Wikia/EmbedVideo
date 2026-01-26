@@ -5,6 +5,8 @@ use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\Parser;
+use MediaWiki\Parser\Sanitizer;
+use MediaWiki\Xml\Xml;
 
 /**
  * EmbedVideo
@@ -279,7 +281,20 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 			$options['linktitle'] = wfMessage( 'ev_default_play_desc' )->text();
 		}
 
-		$json = json_encode( $options );
+		// Sanitize parameters before JSON encoding to prevent XSS
+		// Strip all HTML tags from parameters that will be placed in data attributes
+		$sanitizedOptions = $options;
+		if ( isset( $sanitizedOptions['description'] ) ) {
+			$sanitizedOptions['description'] = Sanitizer::stripAllTags( $sanitizedOptions['description'] );
+		}
+		if ( isset( $sanitizedOptions['notice'] ) ) {
+			$sanitizedOptions['notice'] = Sanitizer::stripAllTags( $sanitizedOptions['notice'] );
+		}
+		if ( isset( $sanitizedOptions['linktitle'] ) ) {
+			$sanitizedOptions['linktitle'] = Sanitizer::stripAllTags( $sanitizedOptions['linktitle'] );
+		}
+
+		$json = json_encode( $sanitizedOptions );
 
 		$link = Xml::element( 'a', [
 			'href' => '#',
@@ -305,10 +320,15 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		$args = array_merge( self::$validArguments, $args );
 
 		$pid = $args['id'] ?? 'default';
+		// Sanitize the player ID to prevent injection
+		$pid = Sanitizer::escapeIdForAttribute( $pid );
+
 		$w = min( 2000, max( 240, isset( $args['w'] ) ? (int)$args['w'] : 800 ) );
 		$h = min( 1200, max( 80, isset( $args['h'] ) ? (int)$args['h'] : ( 9 * $w / 16 ) ) );
-		$style = isset( $args['style'] ) ? ' ' . $args['style'] : '';
-		$class = isset( $args['class'] ) ? ' ' . $args['class'] : '';
+
+		// Sanitize style and class to prevent attribute injection
+		$style = isset( $args['style'] ) ? ' ' . Sanitizer::checkCss( $args['style'] ) : '';
+		$class = isset( $args['class'] ) ? ' ' . Sanitizer::escapeClass( $args['class'] ) : '';
 
 		if ( $args['defaultid'] && $args['service'] ) {
 			// so we don't have to deal with any screwy parsing of tags by the HTML class.
@@ -739,7 +759,14 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	 * @return void
 	 */
 	private static function setDescription( string $description, Parser $parser ): void {
-		self::$description = ( !$description ? false : $parser->recursiveTagParse( $description ) );
+		if ( !$description ) {
+			self::$description = false;
+			return;
+		}
+
+		// Parse the description through MediaWiki's parser for wikitext support
+		// The parser's recursiveTagParse already handles sanitization of HTML output
+		self::$description = $parser->recursiveTagParse( $description );
 	}
 
 	/**
