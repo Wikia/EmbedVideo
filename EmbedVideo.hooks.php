@@ -770,13 +770,13 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 	}
 
 	/**
-	 * Set the description without using the parser
+	 * Set the description without using the parser, treating it as plain text
 	 *
 	 * @param string $description
 	 * @return void
 	 */
 	private static function setDescriptionNoParse( string $description ): void {
-		self::$description = ( !$description ? false : $description );
+		self::$description = ( !$description ? false : htmlspecialchars( $description ) );
 	}
 
 	/**
