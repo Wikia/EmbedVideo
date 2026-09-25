@@ -648,7 +648,7 @@ class VideoService {
 				htmlentities( $this->getVideoID(), ENT_QUOTES ),
 				$this->getWidth(),
 				$this->getHeight(),
-				$this->getIframeTitle(),
+				htmlentities( $this->getIframeTitle(), ENT_QUOTES ),
 			];
 
 			if ( $this->getExtraIds() !== false ) {
