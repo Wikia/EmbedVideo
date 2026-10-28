@@ -9,7 +9,18 @@
 		$('a.embedvideo-evl').on('click', function(e){
 			e.preventDefault();
 
-			var data = $(this).data('video-json');
+			// LOREE-196 - copy only known own string keys so wikitext-controlled keys such as
+			// __proto__ never reach mw.Api's $.extend and pollute the request prototype.
+			var raw = $(this).data('video-json') || {};
+			var data = {};
+			[
+				'service', 'id', 'dimensions', 'alignment', 'description', 'container',
+				'urlargs', 'autoresize', 'valignment', 'player', 'notice'
+			].forEach(function(key) {
+				if (Object.prototype.hasOwnProperty.call(raw, key) && typeof raw[key] === 'string') {
+					data[key] = raw[key];
+				}
+			});
 			data['action'] = 'embedvideo';
 			if (typeof data['player'] === 'undefined') {
 				data['player'] = 'default';

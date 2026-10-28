@@ -219,6 +219,12 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		$options = [];
 		parse_str( implode( "&", $args ), $options );
 
+		// parse_str() turns keys like `__proto__[description]` into nested arrays. Once JSON
+		// encoded into data-video-json they pollute Object.prototype on the client and smuggle
+		// unsanitized values into the API call, so keep only plain string options.
+		$options = array_filter( $options, 'is_string' );
+		unset( $options['__proto__'], $options['constructor'], $options['prototype'] );
+
 		// default service to youtube for compatibility with vlink
 		$options['service'] = $options['service'] ?? "youtube";
 
