@@ -40,7 +40,8 @@
 	"ResourceModules": {
 		"ext.embedVideo": {
 			"scripts": [
-				"js/autoResize.js"
+				"js/autoResize.js",
+				"js/lazyMedia.js"
 			],
 			"position": "top",
 			"targets": [
@@ -88,7 +89,8 @@
 		}
 	},
 	"Hooks": {
-		"ParserFirstCallInit": "main"
+		"ParserFirstCallInit": "main",
+		"BeforePageDisplay": "main"
 	},
 	"manifest_version": 1
 }

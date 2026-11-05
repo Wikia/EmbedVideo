@@ -96,11 +96,12 @@ class VideoTransformOutput extends MediaTransformOutput {
 			$descLink = '';
 		}
 
+		// No src: see AudioTransformOutput::toHtml() and js/lazyMedia.js.
 		return Html::rawElement( 'video', [
-			'src' => $this->url . ( $inOut !== false ? '#t=' . implode( ',', $inOut ) : '' ),
+			'data-src' => $this->url . ( $inOut !== false ? '#t=' . implode( ',', $inOut ) : '' ),
 			'width' => $this->getWidth(),
 			'height' => $this->getHeight(),
-			'class' => $class ?? false,
+			'class' => trim( 'embedvideo-lazymedia ' . ( $class ?? '' ) ),
 			'style' => $style ? implode( ' ', $style ) : false,
 			'controls' => true,
 		], $descLink );

@@ -2,6 +2,7 @@
 
 use EmbedVideo\VideoService;
 use MediaWiki\Hook\ParserFirstCallInitHook;
+use MediaWiki\Output\Hook\BeforePageDisplayHook;
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\Parser;
@@ -17,7 +18,7 @@ use MediaWiki\Xml\Xml;
  * @link    https://www.mediawiki.org/wiki/Extension:EmbedVideo
  */
 
-class EmbedVideoHooks implements ParserFirstCallInitHook {
+class EmbedVideoHooks implements ParserFirstCallInitHook, BeforePageDisplayHook {
 	/**
 	 * Temporary storage for the current service object.
 	 *
@@ -148,6 +149,21 @@ class EmbedVideoHooks implements ParserFirstCallInitHook {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Media rendered outside the parser (file description pages, galleries on
+	 * category pages, Special:NewFiles, Special:Search) never runs parserTransformHook;
+	 * add the lazy media script for those here.
+	 *
+	 * @param OutputPage $out
+	 * @param Skin $skin
+	 * @return void
+	 */
+	public function onBeforePageDisplay( $out, $skin ): void {
+		if ( str_contains( $out->getHTML(), 'embedvideo-lazymedia' ) ) {
+			$out->addModules( [ 'ext.embedVideo' ] );
+		}
 	}
 
 	/**
