@@ -99,10 +99,12 @@ class AudioTransformOutput extends MediaTransformOutput {
 			$descLink = '';
 		}
 
+		// No src: Chromium caps live media players per page (1000 on desktop), so
+		// js/lazyMedia.js attaches the source only while the element is near the viewport.
 		return Html::rawElement( 'audio', [
-			'src' => $this->url . ( $inOut !== false ? '#t=' . implode( ',', $inOut ) : '' ),
+			'data-src' => $this->url . ( $inOut !== false ? '#t=' . implode( ',', $inOut ) : '' ),
 			'width' => $this->getWidth(),
-			'class' => $class ?? false,
+			'class' => trim( 'embedvideo-lazymedia ' . ( $class ?? '' ) ),
 			'style' => $style ? implode( ' ', $style ) : false,
 			'controls' => true,
 		], $descLink );

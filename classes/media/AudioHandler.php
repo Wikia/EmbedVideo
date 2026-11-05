@@ -14,6 +14,7 @@ namespace EmbedVideo;
 use File;
 use FSFile;
 use MediaHandler;
+use MediaWiki\Parser\Parser;
 
 class AudioHandler extends MediaHandler {
 	/**
@@ -165,6 +166,19 @@ class AudioHandler extends MediaHandler {
 		$this->normaliseParams( $file, $params );
 
 		return new AudioTransformOutput( $file, $params );
+	}
+
+	/**
+	 * Called by the parser (and galleries) for every file rendered with this handler.
+	 * Adds the script that attaches sources to the src-less media elements.
+	 * VideoHandler inherits this.
+	 *
+	 * @param Parser $parser
+	 * @param File $file
+	 * @return void
+	 */
+	public function parserTransformHook( $parser, $file ): void {
+		$parser->getOutput()->addModules( [ 'ext.embedVideo' ] );
 	}
 
 	/**
