@@ -45,6 +45,13 @@
 
 	// Release paused offscreen players, oldest first, until back within budget.
 	function trim() {
+		// Forget elements removed from the page (live preview, VE re-render).
+		live.forEach( function ( el ) {
+			if ( !el.isConnected ) {
+				live.delete( el );
+				observer.unobserve( el );
+			}
+		} );
 		live.forEach( function ( el ) {
 			if ( live.size > BUDGET && el.lazyMediaOffscreen ) {
 				release( el );
@@ -55,6 +62,10 @@
 	var observer = 'IntersectionObserver' in window ?
 		new IntersectionObserver( function ( entries ) {
 			entries.forEach( function ( entry ) {
+				if ( !entry.target.isConnected ) {
+					observer.unobserve( entry.target );
+					return;
+				}
 				entry.target.lazyMediaOffscreen = !entry.isIntersecting;
 				if ( entry.isIntersecting ) {
 					attach( entry.target );
@@ -70,8 +81,8 @@
 			if ( observer ) {
 				observer.observe( el );
 				// A clip playing offscreen can be released once it stops.
+				// 'pause' also fires when playback ends, so no 'ended' listener.
 				el.addEventListener( 'pause', trim );
-				el.addEventListener( 'ended', trim );
 			} else {
 				attach( el );
 			}
