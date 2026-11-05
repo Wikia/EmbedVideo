@@ -152,17 +152,15 @@ class EmbedVideoHooks implements ParserFirstCallInitHook, BeforePageDisplayHook 
 	}
 
 	/**
-	 * File description pages render media outside the parser, so parserTransformHook
-	 * never runs there; add the lazy media script for them here.
+	 * Media rendered outside the parser (file description pages, galleries on
+	 * category pages, Special:NewFiles, Special:Search) never runs parserTransformHook;
+	 * add the lazy media script for those here.
 	 *
 	 * @param OutputPage $out
 	 * @param Skin $skin
 	 * @return void
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
-		if ( !$out->getTitle()?->inNamespace( NS_FILE ) ) {
-			return;
-		}
 		if ( str_contains( $out->getHTML(), 'embedvideo-lazymedia' ) ) {
 			$out->addModules( [ 'ext.embedVideo' ] );
 		}

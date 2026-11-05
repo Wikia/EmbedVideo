@@ -101,6 +101,7 @@ class AudioTransformOutput extends MediaTransformOutput {
 
 		// No src: Chromium caps live media players per page (1000 on desktop), so
 		// js/lazyMedia.js attaches the source only while the element is near the viewport.
+		// Trade-off: without JS (crawlers, bots, action=parse) the player can't play.
 		return Html::rawElement( 'audio', [
 			'data-src' => $this->url . ( $inOut !== false ? '#t=' . implode( ',', $inOut ) : '' ),
 			'width' => $this->getWidth(),
