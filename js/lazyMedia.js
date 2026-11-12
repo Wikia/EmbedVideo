@@ -78,6 +78,12 @@
 	mw.hook( 'wikipage.content' ).add( function ( $content ) {
 		var elements = $content[ 0 ] ? $content[ 0 ].querySelectorAll( SELECTOR ) : [];
 		Array.prototype.forEach.call( elements, function ( el ) {
+			// dev:OggPlayer.js reads the URL from audio[src] in its .audio-button wrapper and
+			// falls back to the wrapper's data-src; expose it there since src is now lazy.
+			var wrapper = el.closest( '.audio-button' );
+			if ( wrapper && !wrapper.hasAttribute( 'data-src' ) ) {
+				wrapper.setAttribute( 'data-src', el.dataset.src );
+			}
 			if ( observer ) {
 				observer.observe( el );
 				// A clip playing offscreen can be released once it stops.
